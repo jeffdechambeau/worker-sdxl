@@ -8,16 +8,7 @@ INPUT_SCHEMA = {
         'required': False,
         'default': None
     },
-    'height': {
-        'type': int,
-        'required': False,
-        'default': 1024
-    },
-    'width': {
-        'type': int,
-        'required': False,
-        'default': 1024
-    },
+    # removed height and width
     'seed': {
         'type': int,
         'required': False,
@@ -59,7 +50,20 @@ INPUT_SCHEMA = {
         'default': 1,
         'constraints': lambda img_count: 3 > img_count > 0
     },
-    // new variables
+    # new variables
+    'size':{
+        'type': string,
+        'default': 'small',
+        'required': False,
+        'constraints':  lambda item: item in ['small', 'medium', 'large']
+    },
+    'aspect_ratio':{
+        'type': string,
+        'default': '2:3',
+        'required': False,
+        'constraints': lambda item: item in ['3:2', '5:4', '1:1', '4:5','2:3']
+    },    
+    # for individual steps
     'hires_steps': {
         'type': int,
         'required': False,
@@ -92,5 +96,31 @@ INPUT_SCHEMA = {
         'type': int,
         'required': False, 
     },  
-    
+    'inpaint_area': {
+        'type': boolean,
+        'required': False,
+        'default': False
+    }
+    'control_net_enabled':{
+        'type': boolean,
+        'default': False,
+        'required': False
+    },
+    'control_net_mode':{
+        'type': string,
+        'default': None,
+        'required': False,
+        'constraints': lambda str: str in ['canny','depth','pose']
+    },
+    'control_net_preprocessor':{
+        'type': string,
+        'default': None,
+        'required': False,
+    },
+    'control_net_conditioning_scale':{
+        'type': string,
+        'default': 'small',
+        'required': False,
+        'constraints':  lambda item: item in ['small', 'medium', 'large']
+    }
 }
