@@ -76,8 +76,21 @@ INPUT_SCHEMA = {
         'type': float,
         'required': False,
         'default': 0,
-        'constraints': lambda num_steps: 2 > num_steps > 0
-    }
-        
+        'constraints': lambda amt: 2 > amt > 0
+    },
+    'inpaint_face_denoising_strength': {
+        'type': float,
+        'required': False,
+        'default': 0,
+        'constraints': lambda str: 1 > str > 0.1
+    },
+    'inpaint_faces_width': {
+        'type': int,
+        'required': False,
+    },
+    'inpaint_faces_height': {
+        'type': int,
+        'required': False, 
+    },  
     
 }
