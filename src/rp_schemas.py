@@ -58,5 +58,26 @@ INPUT_SCHEMA = {
         'required': False,
         'default': 1,
         'constraints': lambda img_count: 3 > img_count > 0
+    },
+    // new variables
+    'hires_steps': {
+        'type': int,
+        'required': False,
+        'default': 0,
+        'constraints': lambda num_steps: 100 > num_steps > 0
+    },
+    'hires_denoising_strength': {
+        'type': int,
+        'required': False,
+        'default': 0,
+        'constraints': lambda num_steps: 100 > num_steps > 0
+    },
+    'upscale_by': {
+        'type': float,
+        'required': False,
+        'default': 0,
+        'constraints': lambda num_steps: 2 > num_steps > 0
     }
+        
+    
 }
