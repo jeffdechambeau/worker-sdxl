@@ -100,8 +100,8 @@ INPUT_SCHEMA = {
         'type': boolean,
         'required': False,
         'default': False
-    }
-    'control_net_enabled':{
+    },
+    'control_net_enabled': {
         'type': boolean,
         'default': False,
         'required': False
