@@ -51,18 +51,18 @@ INPUT_SCHEMA = {
         'constraints': lambda img_count: 3 > img_count > 0
     },
     # new variables
-    'size':{
-        'type': string,
+    'size': {
+        'type': str,
         'default': 'small',
         'required': False,
-        'constraints':  lambda item: item in ['small', 'medium', 'large']
+        'constraints': lambda item: item in ['small', 'medium', 'large']
     },
-    'aspect_ratio':{
-        'type': string,
+    'aspect_ratio': {
+        'type': str,
         'default': '2:3',
         'required': False,
-        'constraints': lambda item: item in ['3:2', '5:4', '1:1', '4:5','2:3']
-    },    
+        'constraints': lambda item: item in ['3:2', '5:4', '1:1', '4:5', '2:3']
+    },
     # for individual steps
     'hires_steps': {
         'type': int,
@@ -94,33 +94,33 @@ INPUT_SCHEMA = {
     },
     'inpaint_faces_height': {
         'type': int,
-        'required': False, 
-    },  
+        'required': False,
+    },
     'inpaint_area': {
-        'type': boolean,
+        'type': bool,
         'required': False,
         'default': False
     },
     'control_net_enabled': {
-        'type': boolean,
+        'type': bool,
         'default': False,
         'required': False
     },
-    'control_net_mode':{
-        'type': string,
+    'control_net_mode': {
+        'type': str,
         'default': None,
         'required': False,
-        'constraints': lambda str: str in ['canny','depth','pose']
+        'constraints': lambda str: str in ['canny', 'depth', 'pose']
     },
-    'control_net_preprocessor':{
-        'type': string,
+    'control_net_preprocessor': {
+        'type': str,
         'default': None,
         'required': False,
     },
-    'control_net_conditioning_scale':{
-        'type': string,
+    'control_net_conditioning_scale': {
+        'type': str,
         'default': 'small',
         'required': False,
-        'constraints':  lambda item: item in ['small', 'medium', 'large']
+        'constraints': lambda item: item in ['small', 'medium', 'large']
     }
 }
