@@ -24,4 +24,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: jeffdechambeau/worker-sdxl
+          tags: jeffdechambeau/worker-sdxl:latest
