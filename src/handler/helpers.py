@@ -1,5 +1,6 @@
 # ---------------------------------- Helper ---------------------------------- #
-import os, base64
+import os
+import base64
 from diffusers import (
     PNDMScheduler,
     LMSDiscreteScheduler,
@@ -8,6 +9,7 @@ from diffusers import (
     DPMSolverMultistepScheduler,
 )
 from runpod.serverless.utils import rp_upload, rp_cleanup
+
 
 def _save_and_upload_images(images, job_id):
     os.makedirs(f"/{job_id}", exist_ok=True)
@@ -21,7 +23,8 @@ def _save_and_upload_images(images, job_id):
             image_urls.append(image_url)
         else:
             with open(image_path, "rb") as image_file:
-                image_data = base64.b64encode(image_file.read()).decode("utf-8")
+                image_data = base64.b64encode(
+                    image_file.read()).decode("utf-8")
                 image_urls.append(f"data:image/png;base64,{image_data}")
 
     rp_cleanup.clean([f"/{job_id}"])
@@ -29,6 +32,7 @@ def _save_and_upload_images(images, job_id):
 
 
 def make_scheduler(name, config):
+    print("makes_cheduler", name, config)
     return {
         "PNDM": PNDMScheduler.from_config(config),
         "KLMS": LMSDiscreteScheduler.from_config(config),

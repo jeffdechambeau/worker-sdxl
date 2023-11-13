@@ -1,9 +1,12 @@
 
-from handler.helpers import  make_scheduler
+from handler.helpers import make_scheduler
 from handler.models import MODELS
 
+
 def generate_with_model(job_input, generator, init_image=None):
-    MODELS.base.scheduler = make_scheduler(job_input['scheduler'], MODELS.base.scheduler.config)
+    MODELS.base.scheduler = make_scheduler(
+        job_input['scheduler'], MODELS.base.scheduler.config)
+    print("generate job input", job_input)
 
     if init_image:
         return MODELS.refiner(

@@ -1,3 +1,4 @@
+import os
 import torch
 import concurrent.futures
 from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
@@ -20,6 +21,7 @@ class ModelHandler:
             torch_dtype=torch.float16, variant="fp16", use_safetensors=True, add_watermarker=False
         ).to("cuda", silence_dtype_warnings=True)
         base_pipe.enable_xformers_memory_efficient_attention()
+        print("Base model loaded", base_model)
         return base_pipe
 
     def load_refiner(self):
@@ -29,6 +31,7 @@ class ModelHandler:
         ).to("cuda", silence_dtype_warnings=True)
 
         refiner_pipe.enable_xformers_memory_efficient_attention()
+        print("Refinder loaded", refiner_model)
         return refiner_pipe
 
     def load_models(self):
