@@ -28,6 +28,7 @@ def wait_for_service(url):
 
 
 def run_inference(params):
+    print(params)
     config = {
         "baseurl": "http://127.0.0.1:3000",
         "api": {
@@ -81,7 +82,7 @@ def handler(event):
     '''
     This is the handler function that will be called by the serverless.
     '''
-    print(event)
+    print("event", event)
     json = run_inference(event["input"])
 
     # return the output that you want to be returned like pre-signed URLs to output artifacts
