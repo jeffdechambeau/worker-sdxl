@@ -1,9 +1,5 @@
 # Base image
-FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+FROM runpod/stable-diffusion:web-ui-9.1.0
 
 # Use bash shell with pipefail option
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -18,19 +14,19 @@ RUN /bin/bash /setup.sh && \
 
 # Install Python dependencies (Worker Template)
 COPY builder/requirements.txt /requirements.txt
-#RUN python3 -m pip install --upgrade pip && \
-#    python3 -m pip install --upgrade -r /requirements.txt --no-cache-dir && \
-#    rm /requirements.txt
-
 RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install --verbose --upgrade -r /requirements.txt --no-cache-dir
+    python3 -m pip install --no-cache-dir --upgrade -r /requirements.txt && \
+    rm /requirements.txt
 
-# Cache Models
-COPY builder/cache_models.py /cache_models.py
-RUN python3 /cache_models.py && \
-    rm /cache_models.py
+# Cleanup section (Worker Template)
+RUN apt-get autoremove -y && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
 
-# Add src files (Worker Template)
+# Remove the empty workspace directory, link to runpod network volume
+RUN rm -rf /workspace && \
+    ln -s /runpod-volume /workspace
+
 ADD src .
-
-CMD python3 -u /rp_handler.py
+RUN chmod a+x /start.sh
+CMD /start.sh
