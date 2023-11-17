@@ -14,9 +14,7 @@ automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 # ---------------------------------------------------------------------------- #
 
 def wait_for_service(url):
-    '''
-    Check if the service is ready to receive requests.
-    '''
+    print("url", url)
     while True:
         try:
             requests.get(url)
@@ -26,7 +24,7 @@ def wait_for_service(url):
         except Exception as err:
             print("Error: ", err)
 
-        time.sleep(0.2)
+        time.sleep(1)
 
 
 def run_inference(params):
@@ -83,7 +81,7 @@ def handler(event):
     '''
     This is the handler function that will be called by the serverless.
     '''
-
+    print(event)
     json = run_inference(event["input"])
 
     # return the output that you want to be returned like pre-signed URLs to output artifacts
