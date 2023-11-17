@@ -9,12 +9,8 @@ retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
 automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 
 
-# ---------------------------------------------------------------------------- #
-#                              Automatic Functions                             #
-# ---------------------------------------------------------------------------- #
-
 def wait_for_service(url):
-    print("url", url)
+    print("URL", url)
     while True:
         try:
             requests.get(url)
@@ -28,7 +24,7 @@ def wait_for_service(url):
 
 
 def run_inference(params):
-    print(params)
+    print("PARAMS", params)
     config = {
         "baseurl": "http://127.0.0.1:3000",
         "api": {
@@ -75,15 +71,10 @@ def run_inference(params):
     return response.json()
 
 
-# ---------------------------------------------------------------------------- #
-#                                RunPod Handler                                #
-# ---------------------------------------------------------------------------- #
 def handler(event):
-    '''
-    This is the handler function that will be called by the serverless.
-    '''
     print("event", event)
     json = run_inference(event["input"])
+    print("jSON", json)
 
     # return the output that you want to be returned like pre-signed URLs to output artifacts
     return json
