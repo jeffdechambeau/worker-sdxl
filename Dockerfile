@@ -1,5 +1,6 @@
 # Base image
-FROM runpod/stable-diffusion:web-ui-9.1.0
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
+# Base image
 
 # Use bash shell with pipefail option
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
