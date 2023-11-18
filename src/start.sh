@@ -13,7 +13,6 @@ pip --version
 pip freeze
 
 echo "Starting WebUI API"
-python3 /workspace/stable-diffusion-webui/webui.py --skip-python-version-check --skip-torch-cuda-test --skip-install --lowram --opt-sdp-attention --disable-safe-unpickle --port 3000 --api --nowebui --skip-version-check  --no-hashing --no-download-sd-model &
-
+python3 /workspace/sd/stable-diffusion-webui/webui.py --skip-python-version-check --skip-torch-cuda-test --opt-sdp-attention --port 3000 --api --nowebui --skip-version-check
 echo "Starting RunPod Handler"
-python3 -u /handler.py
+python3 -u rp_ handler.py
