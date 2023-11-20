@@ -34,7 +34,8 @@ def run_inference(inference_request):
     '''
     Run inference on a request.
     '''
-    api_name = inference_requset['api_name'] or 'txt2img'
+    print("Got request", inference_request)
+    api_name = inference_request['api_name'] or 'txt2img'
     response = automatic_session.post(url=f'{LOCAL_URL}/{api_name}',
                                       json=inference_request, timeout=600)
     return response.json()
