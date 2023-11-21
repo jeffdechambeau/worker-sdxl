@@ -1,12 +1,8 @@
 #!/bin/bash
-echo "In src/start.sh"
-echo "Contents of /"
-ls /
-
-echo "Contents of /workspace"
-ls /workspace
-
 echo "Worker Initiated"
+
+pip install -U pip
+pip install -U httpcore
 
 echo "Starting WebUI API"
 python3 /workspace/sd/stable-diffusion-webui/webui.py --api --no-half --disable-nan-check 
