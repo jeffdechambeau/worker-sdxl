@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "In builder/setup.sh"
 # Stop script on error
 set -e
 

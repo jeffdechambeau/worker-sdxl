@@ -1,4 +1,10 @@
 #!/bin/bash
+echo "In src/start.sh"
+echo "Contents of /"
+ls /
+
+echo "Contents of /workspace"
+ls /workspace
 
 echo "Worker Initiated"
 
