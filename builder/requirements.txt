@@ -33,8 +33,6 @@ pyngrok==7.0.0
 httpcore==0.15
 inflection==0.5.1
 jsonmerge==1.8.0
-aiohttp
-aiohttp_retry 
 
 # Miscellaneous Libraries
 blendmodes==2022

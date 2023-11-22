@@ -4,7 +4,7 @@ import runpod
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-LOCAL_URL = "http://127.0.0.1:7860/sdapi/v1"
+LOCAL_URL = "http://127.0.0.1:3000/sdapi/v1"
 
 automatic_session = requests.Session()
 retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
