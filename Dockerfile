@@ -23,9 +23,10 @@ RUN python3 -m pip install --upgrade pip && \
     rm /requirements.txt
 
 RUN ln -s /runpod-volume /workspace
+
 # Add src files (Worker Template)
 ADD src .
 
-CMD python3 /workspace/sd/stable-diffusion-webui/webui.py --api --no-half --disable-nan-check 
-CMD python3 -u /rp_handler.py
-
+# Set permissions and specify the command to run
+RUN chmod +x /start.sh
+CMD /start.sh
