@@ -11,13 +11,7 @@ retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
 automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 
 
-# ---------------------------------------------------------------------------- #
-#                              Automatic Functions                             #
-# ---------------------------------------------------------------------------- #
 def wait_for_service(url):
-    '''
-    Check if the service is ready to receive requests.
-    '''
     while True:
         try:
             requests.get(url, timeout=120)
@@ -31,9 +25,6 @@ def wait_for_service(url):
 
 
 def run_inference(inference_request):
-    '''
-    Run inference on a request.
-    '''
     print("Got request", inference_request)
     api_name = inference_request['api_name'] or 'txt2img'
     response = automatic_session.post(url=f'{LOCAL_URL}/{api_name}',
@@ -41,17 +32,9 @@ def run_inference(inference_request):
     return response.json()
 
 
-# ---------------------------------------------------------------------------- #
-#                                RunPod Handler                                #
-# ---------------------------------------------------------------------------- #
 def handler(event):
-    '''
-    This is the handler function that will be called by the serverless.
-    '''
 
     json = run_inference(event["input"])
-
-    # return the output that you want to be returned like pre-signed URLs to output artifacts
     return json
 
 
@@ -60,4 +43,6 @@ if __name__ == "__main__":
 
     print("WebUI API Service is ready. Starting RunPod...")
 
-    runpod.serverless.start({"handler": handler})
+    runpod.serverless.start({"handler": handler,
+                             "return_aggregate_stream": True
+                             })
