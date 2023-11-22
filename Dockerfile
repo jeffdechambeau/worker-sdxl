@@ -22,11 +22,6 @@ RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install --upgrade -r /requirements.txt --no-cache-dir && \
     rm /requirements.txt
 
-# Cache Models
-COPY builder/cache_models.py /cache_models.py
-RUN python3 /cache_models.py && \
-    rm /cache_models.py
-
 RUN ln -s /runpod-volume /workspace
 # Add src files (Worker Template)
 ADD src .
