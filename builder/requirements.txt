@@ -47,5 +47,8 @@ psutil==5.9.5
 resize-right==0.0.2
 tomesd==0.1.3
 rich
+ultralytics
 
-
+diffusers[torch]
+accelerate
+discord-webhook
