@@ -3,6 +3,8 @@ fastapi[all]==0.94.0
 pydantic<2
 git+https://github.com/runpod/runpod-python.git
 git+https://github.com/openai/CLIP.git
+git+https://github.com/mlfoundations/open_clip.git
+git+https://github.com/TencentARC/GFPGAN.git
 
 # Image Processing Libraries
 opencv-python-headless==4.8.1.78
