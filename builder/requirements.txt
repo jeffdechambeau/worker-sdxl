@@ -2,6 +2,7 @@
 fastapi[all]==0.94.0
 pydantic<2
 git+https://github.com/runpod/runpod-python.git
+git+https://github.com/openai/CLIP.git
 
 # Image Processing Libraries
 opencv-python-headless==4.8.1.78
@@ -43,5 +44,6 @@ piexif==1.1.3
 psutil==5.9.5
 resize-right==0.0.2
 tomesd==0.1.3
-open-clip-torch
+
+
 
