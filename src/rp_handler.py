@@ -29,7 +29,7 @@ def run_inference(event):
         response = automatic_session.get(
             f'{LOCAL_URL}/{endpoint}', timeout=600)
     else:  # Default to POST
-        api_name = event.get("api_name", "txt2img")
+        api_name = event.get("api_name", "sdapi/txt2img")
         response = automatic_session.post(
             f'{LOCAL_URL}/{api_name}', json=event.get("input", {}), timeout=600)
     return response.json()
