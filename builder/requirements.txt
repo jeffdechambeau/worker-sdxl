@@ -74,7 +74,7 @@ lycoris_lora==1.9.0
 onnx==1.14.1
 onnxruntime-gpu==1.16.0
 protobuf==3.20.3
-open-clip-torch==2.20.0
+open-clip-torch
 opencv-python==4.7.0.68
 prodigyopt==1.0
 pytorch-lightning==1.9.0  
