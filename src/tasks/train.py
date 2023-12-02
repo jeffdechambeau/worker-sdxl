@@ -8,7 +8,6 @@ from PIL import Image
 
 pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/runDiffusionXL.safetensors"
 train_data_dir_base = '/workspace/witit-custom/active_training'
-train_data_dir_base = '/Users/jds/code/upwork/Nathaniel/worker-sdxl/active_training'
 logging_dir = "/workspace/logs/"
 script_path = '/workspace/kohya_ss/sdxl_train.py'
 

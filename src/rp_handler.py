@@ -8,6 +8,7 @@ def handler(event):
     data = event.get('input', {})
     api_name = data['api_name']
     print(f"Received API call: {api_name}")
+
     if api_name == 'dreambooth':
         return run_training(data)
 
