@@ -13,7 +13,7 @@ scikit-image==0.21.0
 
 # PyTorch and TensorFlow
 torch==2.0.1+cu118 
-torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 
+torchvision --extra-index-url https://download.pytorch.org/whl/cu118 
 xformers==0.0.21 
 bitsandbytes==0.41.1
 tensorboard==2.14.1 
