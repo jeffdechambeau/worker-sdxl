@@ -22,10 +22,10 @@ wheel
 tensorrt
 
 # Machine Learning Libraries
-accelerate==0.23.0  # Chosen the latest version
+accelerate==0.23.0 
 basicsr==1.4.2
-einops==0.6.0  # Chosen the latest version
-gradio==3.41.2  # Kept the version compatible with other libraries
+einops==0.6.0  
+gradio==3.41.2
 kornia==0.6.7
 numpy==1.23.5
 omegaconf==2.2.3
@@ -59,7 +59,7 @@ rich
 ultralytics
 
 # Additional Libraries
-diffusers[torch]==0.21.4  # Chosen the latest version
+diffusers[torch]==0.21.4 
 discord-webhook
 aiofiles==23.2.1
 altair==4.2.2
@@ -77,12 +77,12 @@ protobuf==3.20.3
 open-clip-torch==2.20.0
 opencv-python==4.7.0.68
 prodigyopt==1.0
-pytorch-lightning==1.9.0  # Kept the earlier version for compatibility
+pytorch-lightning==1.9.0  
 rich==13.4.1
-safetensors==0.3.1  # Kept only one version
-timm==0.6.12  # Chosen the latest version
+safetensors==0.3.1
+timm==0.6.12  
 tk==0.1.0
 toml==0.10.2
-transformers==4.30.2  # Kept only one version
+transformers==4.30.2  
 voluptuous==0.13.1
 wandb==0.15.11
