@@ -1,21 +1,28 @@
 
+import subprocess
 import os
 import base64
 import io
 import requests
 from PIL import Image
+
 pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/runDiffusionXL.safetensors"
 train_data_dir_base = '/workspace/witit-custom/active_training'
+train_data_dir_base = '/Users/jds/code/upwork/Nathaniel/worker-sdxl/active_training'
 logging_dir = "/workspace/logs/"
 script_path = '/workspace/kohya_ss/sdxl_train.py'
 
 
-def prepare_folder(username, images):
-    for image_string in images:
+def prepare_folder(username, images, token_name, class_name, repeats=40):
+    output_dir = os.path.join(
+        train_data_dir_base, username, "img", f"{repeats}_{token_name}_{class_name}")
+
+    for i, image_string in enumerate(images):
         image_name = None
 
         if 'http://' in image_string or 'https://' in image_string:
-            image_name = image_string.split('/')[-1]
+            # Assigning a filename with .jpg extension
+            image_name = f"image_{i+1}.jpg"
             try:
                 response = requests.get(image_string)
                 response.raise_for_status()
@@ -26,25 +33,25 @@ def prepare_folder(username, images):
 
         elif 'data:image' in image_string:
             base64_data = image_string.split(',')[1]
+            image_name = f"image_{i+1}.jpg"
             try:
                 image_data = base64.b64decode(base64_data)
             except base64.binascii.Error as e:
                 print(f"Error decoding base64 image: {e}")
                 continue
 
-            image_name = f"image_{len(images)}.jpg"
-
         if image_data:
             try:
                 image = Image.open(io.BytesIO(image_data))
                 image = image.convert('RGB')
-                output_dir = os.path.join(train_data_dir_base, username, 'img')
                 os.makedirs(output_dir, exist_ok=True)
                 image_path = os.path.join(output_dir, image_name)
                 image.save(image_path)
                 print(f"Saved image to {image_path}")
             except Exception as e:
                 print(f"Error processing image: {e}")
+
+    return output_dir
 
 
 def make_command_from_json(json_data):
@@ -72,11 +79,10 @@ def make_command_from_json(json_data):
                         else:
 
                             command.append(str(value))
-    return f'accelerate launch {" ".join(command)}'
+    return f' {" ".join(command)}'
 
 
-def make_train_command(username="undefined", resolution="512,512"):
-    train_data_dir = f'{train_data_dir_base}/{username}/img/'
+def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training"):
     output_dir = f'/workspace/witit-custom/checkpoints/{username}'
 
     config = {
@@ -125,17 +131,32 @@ def make_train_command(username="undefined", resolution="512,512"):
     }
 
     command = make_command_from_json(config)
-    print(command)
+    return command
+
+
+def make_caption_command(directory):
+    command = f"python3 finetune/make_captions_by_git.py --batch_size='1' --max_data_loader_n_workers='2' --max_length='75' --caption_extension='.txt' '{directory}'"
     return command
 
 
 def run_training(input_json):
-    print("input_json", input_json)
+
     username = input_json['username']
     images = input_json['images']
+    resolution = input_json['training_resolution']
+    token_name = input_json['token']
+    class_name = input_json['class']
 
-    # prepare_folder(username, images)
-    # training_command = make_train_command(username)
-    # print(training_command)
-    return {"output": True}
-    # "id": training_command}
+    training_folder = prepare_folder(username, images, token_name, class_name)
+    print(f"Training folder: {training_folder}")
+    training_command = f"accelerate launch {make_train_command(username, resolution, training_folder)}"
+
+    print(f""" 
+          Training command:
+
+          {training_command}
+
+
+          """)
+    subprocess.run(training_command, shell=True, check=True)
+    return training_command

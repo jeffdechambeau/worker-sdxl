@@ -16,7 +16,7 @@ def handler(event):
 
 
 if __name__ == "__main__":
-    # wait_for_service()
+    wait_for_service()
 
     print("WebUI API Service is ready. Starting RunPod...")
 
