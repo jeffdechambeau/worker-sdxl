@@ -29,7 +29,7 @@ gradio==3.41.2
 kornia==0.6.7
 numpy==1.23.5
 omegaconf==2.2.3
-pytorch_lightning==1.9.4  # Version aligned with torch
+pytorch-lightning  # Version aligned with torch
 realesrgan==0.3.0
 safetensors==0.3.1
 timm==0.6.12  # Latest version chosen
@@ -74,10 +74,10 @@ lycoris_lora==1.9.0
 onnx==1.14.1
 onnxruntime-gpu==1.16.0
 protobuf==3.20.3
-open-clip-torch==2.20.0  # Version aligned
-opencv-python==4.7.0.68  # Headless version already included
+open-clip-torch
+opencv-python
 prodigyopt==1.0
 tk==0.1.0
-toml==0.10.2
+toml
 voluptuous==0.13.1
 wandb==0.15.11
