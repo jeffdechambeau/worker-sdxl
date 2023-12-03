@@ -87,7 +87,7 @@ gdown
 numexpr
 functional
 insightface
-socketio
+python-socketio
 lama_cleaner
 send2trash
 ZipUnicode
