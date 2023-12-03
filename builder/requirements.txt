@@ -85,7 +85,7 @@ voluptuous==0.13.1
 wandb==0.15.11
 gdown
 numexpr
-fpyfunctional
+pyfunctional
 insightface==0.7.3
 python-socketio
 lama_cleaner
