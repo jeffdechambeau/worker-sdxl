@@ -109,6 +109,8 @@ WORKDIR /
 
 # Copy the accelerate configuration
 COPY builder/accelerate.yaml ./
+COPY src/* ./
+
 
 # Start the container
 SHELL ["/bin/bash", "--login", "-c"]
