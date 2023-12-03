@@ -86,7 +86,7 @@ wandb==0.15.11
 gdown
 numexpr
 functional
-insightface
+insightface==0.7.3
 python-socketio
 lama_cleaner
 send2trash
