@@ -1,4 +1,5 @@
 # Core Libraries
+wheel
 fastapi[all]==0.94.0
 pydantic<2
 git+https://github.com/runpod/runpod-python.git
@@ -12,14 +13,13 @@ scikit-image==0.21.0
 # PyTorch and TensorFlow
 torch
 torchvision --extra-index-url https://download.pytorch.org/whl/cu118 
-xformers
 bitsandbytes
 tensorboard
 tensorflow
-wheel
 tensorrt
 
 # Machine Learning Libraries
+xformers==0.0.22
 accelerate
 basicsr==1.4.2
 einops==0.6.0  
