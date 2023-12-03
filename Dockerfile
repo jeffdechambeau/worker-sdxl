@@ -106,12 +106,13 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 
 WORKDIR /
 
-
-# Copy the accelerate configuration
 COPY builder/accelerate.yaml ./
-COPY src/* ./
-RUN chmod +x /start.sh
 
+RUN ln -s /runpod-volume /workspace
+
+COPY src .
+
+RUN chmod +x /start.sh
 
 # Start the container
 SHELL ["/bin/bash", "--login", "-c"]
