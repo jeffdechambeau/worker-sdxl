@@ -72,15 +72,14 @@ RUN source /venv/bin/activate && \
 # Install Kohya_ss
 RUN git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss
 WORKDIR /kohya_ss
-COPY kohya_ss/requirements* /kohya_ss/
 RUN git checkout ${KOHYA_VERSION} && \
     python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
+    # If the requirements.txt file is in the kohya_ss repository, it will be used here.
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 install . && \
     pip3 cache purge && \
     deactivate
-
 # Install Application Manager
 WORKDIR /
 RUN git clone https://github.com/ashleykleynhans/app-manager.git /app-manager && \
