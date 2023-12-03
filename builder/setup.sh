@@ -19,6 +19,7 @@ apt-get install -y --no-install-recommends \
 # Install Python 3.10
 add-apt-repository ppa:deadsnakes/ppa -y
 apt-get update && apt-get install -y --no-install-recommends python3.10 python3.10-dev python3.10-distutils
+python3.10 --version
 
 # Install pip for Python 3.10
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
