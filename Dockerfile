@@ -101,7 +101,7 @@ RUN python3 -m venv --system-site-packages /venv && \
 
 # Clone the Automatic1111 Extensions
 RUN git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
-    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
+    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet
 
 #    git clone https://github.com/d8ahazard/sd_dreambooth_extension.git extensions/sd_dreambooth_extension && \
 #    git clone --depth=1 https://github.com/deforum-art/sd-webui-deforum.git extensions/deforum && \
@@ -120,10 +120,6 @@ RUN source /venv/bin/activate && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/adetailer && \
     python3 -m install && \
-    deactivate
-
-# Install dependencies for inpaint anything extension
-RUN source /venv/bin/activate && \
     pip3 install segment_anything lama_cleaner && \
     deactivate
 
