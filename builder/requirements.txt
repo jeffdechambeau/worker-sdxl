@@ -6,24 +6,21 @@ git+https://github.com/openai/CLIP.git
 git+https://github.com/mlfoundations/open_clip.git
 git+https://github.com/TencentARC/GFPGAN.git
 
-
 Pillow==9.5.0
 scikit-image==0.21.0
-
-
 
 # PyTorch and TensorFlow
 torch
 torchvision --extra-index-url https://download.pytorch.org/whl/cu118 
 xformers
-bitsandbytes==0.41.1
-tensorboard==2.14.1 
-tensorflow==2.14.0 
+bitsandbytes
+tensorboard
+tensorflow
 wheel
 tensorrt
 
 # Machine Learning Libraries
-accelerate==0.23.0 
+accelerate
 basicsr==1.4.2
 einops==0.6.0  
 gradio==3.41.2
@@ -37,7 +34,7 @@ safetensors==0.3.1
 timm==0.6.12  # Latest version chosen
 torchdiffeq==0.2.3
 torchsde==0.2.5
-transformers==4.30.2  # Version aligned with torch
+transformers==4.30.2 # Version aligned with torch
 
 # CLI and Development Utilities
 GitPython==3.1.37
@@ -61,7 +58,7 @@ rich==13.4.1  # Version specified
 ultralytics
 
 # Additional Libraries
-diffusers[torch]==0.21.4  # Chosen the latest version
+diffusers[torch]
 discord-webhook
 aiofiles==23.2.1
 altair==4.2.2
