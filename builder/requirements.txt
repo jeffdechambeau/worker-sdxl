@@ -88,6 +88,6 @@ numexpr
 pyfunctional
 insightface==0.7.3
 python-socketio
-lama_cleaner
+lama-cleanerr
 send2trash
 ZipUnicode
