@@ -86,3 +86,5 @@ wandb==0.15.11
 gdown
 numexpr
 functional
+insightface
+socketio
