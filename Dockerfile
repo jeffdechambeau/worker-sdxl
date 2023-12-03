@@ -97,19 +97,7 @@ RUN python3 -m venv --system-site-packages /venv && \
     pip3 install --no-cache-dir xformers && \
     deactivate
 
-# Install the dependencies for the Automatic1111 Stable Diffusion Web UI
-COPY a1111/requirements.txt a1111/requirements_versions.txt ./
-COPY a1111/cache-sd-model.py a1111/install-automatic.py ./
-RUN source /venv/bin/activate && \
-    python3 -m install-automatic --skip-torch-cuda-test && \
-    deactivate
 
-# Cache the Stable Diffusion Models
-# SDXL models result in OOM kills with 8GB system memory, probably need 12GB+ to cache these
-RUN source /venv/bin/activate && \
-    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/sd_xl_base_1.0.safetensors && \
-    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/sd_xl_refiner_1.0.safetensors && \
-    deactivate
 
 # Clone the Automatic1111 Extensions
 RUN git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
@@ -204,11 +192,6 @@ RUN curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/scr
 
 # ADD SDXL styles.csv
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
-
-# Copy ComfyUI Extra Model Paths (to share models with A1111)
-
-# Remove existing SSH host keys
-RUN rm -f /etc/ssh/ssh_host_*
 
 
 WORKDIR /
