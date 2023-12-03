@@ -88,3 +88,6 @@ numexpr
 functional
 insightface
 socketio
+lama_cleaner
+send2trash
+ZipUnicode
