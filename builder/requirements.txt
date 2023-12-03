@@ -11,6 +11,7 @@ Pillow==9.5.0
 scikit-image==0.21.0
 
 
+
 # PyTorch and TensorFlow
 torch
 torchvision --extra-index-url https://download.pytorch.org/whl/cu118 
@@ -82,3 +83,6 @@ tk==0.1.0
 toml
 voluptuous==0.13.1
 wandb==0.15.11
+gdown
+numexpr
+functional
