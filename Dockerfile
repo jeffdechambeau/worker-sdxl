@@ -72,19 +72,6 @@ RUN pip3 install --no-cache-dir torch==2.0.1 torchvision torchaudio --index-url 
 # Stage 2: Install applications
 FROM base as setup
 
-RUN mkdir -p /sd-models
-
-# Add SDXL models and VAE
-# These need to already have been downloaded:
-#   wget https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
-#   wget https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
-#   wget https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors
-#COPY sd_xl_base_1.0.safetensors /sd-models/sd_xl_base_1.0.safetensors
-#COPY sd_xl_refiner_1.0.safetensors /sd-models/sd_xl_refiner_1.0.safetensors
-#COPY sdxl_vae.safetensors /sd-models/sdxl_vae.safetensors
-
-# Clone the git repo of the Stable Diffusion Web UI by Automatic1111
-# and set version
 WORKDIR /
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     cd /stable-diffusion-webui && \
@@ -103,17 +90,6 @@ RUN python3 -m venv --system-site-packages /venv && \
 RUN git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet
 
-#    git clone https://github.com/d8ahazard/sd_dreambooth_extension.git extensions/sd_dreambooth_extension && \
-#    git clone --depth=1 https://github.com/deforum-art/sd-webui-deforum.git extensions/deforum && \
-#    git clone --depth=1 https://github.com/ashleykleynhans/a1111-sd-webui-locon.git extensions/a1111-sd-webui-locon && \
-#    git clone --depth=1 https://github.com/Gourieff/sd-webui-reactor.git extensions/sd-webui-reactor && \
-#    git clone --depth=1 https://github.com/zanllp/sd-webui-infinite-image-browsing.git extensions/infinite-image-browsing && \
-#    git clone --depth=1 https://github.com/Uminosachi/sd-webui-inpaint-anything.git extensions/inpaint-anything && \    
-#    git clone --depth=1 https://github.com/civitai/sd_civitai_extension.git extensions/sd_civitai_extension && \
-#    git clone --depth=1 https://github.com/BlafKing/sd-civitai-browser-plus.git extensions/sd-civitai-browser-plus
-
-# Install dependencies for Deforum, ControlNet, ReActor, Infinite Image Browsing,
-# After Detailer, and CivitAI Browser+ extensions
 RUN source /venv/bin/activate && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/sd-webui-controlnet && \
@@ -139,8 +115,9 @@ RUN source /venv/bin/activate && \
 
 # Install Kohya_ss
 RUN git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss
+COPY kohya_ss/requirements* /kohya_ss/
+
 WORKDIR /kohya_ss
-COPY kohya_ss/requirements* ./
 RUN git checkout ${KOHYA_VERSION} && \
     python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
