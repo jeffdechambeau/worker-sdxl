@@ -22,3 +22,31 @@ size_config = {
         "2:3": {"height": 1024, "width": 680}
     }
 }
+
+size_config_alt = {
+    "3:2": {
+        "small": {"height": 340, "width": 512},
+        "medium": {"height": 512, "width": 768},
+        "large": {"height": 680, "width": 1024}
+    },
+    "5:4": {
+        "small": {"height": 408, "width": 512},
+        "medium": {"height": 616, "width": 768},
+        "large": {"height": 820, "width": 1024}
+    },
+    "1:1": {
+        "small": {"height": 512, "width": 512},
+        "medium": {"height": 768, "width": 768},
+        "large": {"height": 1024, "width": 1024}
+    },
+    "4:5": {
+        "small": {"height": 512, "width": 408},
+        "medium": {"height": 768, "width": 616},
+        "large": {"height": 1024, "width": 820}
+    },
+    "2:3": {
+        "small": {"height": 512, "width": 340},
+        "medium": {"height": 768, "width": 512},
+        "large": {"height": 1024, "width": 680}
+    }
+}
