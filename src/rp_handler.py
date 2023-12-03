@@ -10,6 +10,7 @@ automatic_session = requests.Session()
 
 
 def handler(event):
+    print(event)
     method = event.get("method", "").upper()
     if method == "GET":
         endpoint = event.get("endpoint", "")
@@ -38,7 +39,7 @@ def handler(event):
 
 
 if __name__ == "__main__":
-    wait_for_service()
+    # wait_for_service()
 
     print("WebUI API Service is ready. Starting RunPod...")
 
