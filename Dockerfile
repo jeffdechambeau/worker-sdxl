@@ -1,33 +1,24 @@
 # Base image
-FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
-
-# Environment settings
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Use bash shell with pipefail option
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+FROM python:3.10-slim-buster
 
 # Set the working directory
 WORKDIR /
 
-# Copy setup script and requirements
-COPY builder/setup.sh /setup.sh
-
-# Install Python dependencies (Worker Template)
-COPY builder/requirements.txt /requirements.txt
-RUN python3.10 -m pip install --upgrade pip && \
-    python3.10 -m pip install --no-cache-dir -r /requirements.txt && \
-    rm /requirements.txt
-# Run setup script
-RUN /bin/bash /setup.sh && rm /setup.sh
+# Install System Dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    curl \
+    git \
+    wget \
+    openssh-server \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-RUN python3 -m pip install --no-cache-dir -r /requirements.txt && rm /requirements.txt
-
-# Link to runpod volume
-RUN ln -s /runpod-volume /workspace
+COPY builder/requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt && rm /requirements.txt
 
 # Add src files
 ADD src .
