@@ -31,7 +31,7 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python
 RUN pip3 install --no-cache-dir torch==2.0.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 && \
     pip3 install --no-cache-dir xformers==0.0.22 tensorrt && \
     pip3 install runpod && \
-    pip3 install accelerate pytorch_lightning diffusers omegaconf transformers kornia && \
+    pip3 install accelerate pytorch_lightning diffusers omegaconf transformers kornia open-clip-torch && \
     pip3 install toml gradio einops && \
     pip3 cache purge
 
