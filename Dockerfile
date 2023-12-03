@@ -14,8 +14,12 @@ WORKDIR /
 
 # Copy setup script and requirements
 COPY builder/setup.sh /setup.sh
-COPY builder/requirements.txt /requirements.txt
 
+# Install Python dependencies (Worker Template)
+COPY builder/requirements.txt /requirements.txt
+RUN python3.10 -m pip install --upgrade pip && \
+    python3.10 -m pip install --no-cache-dir -r /requirements.txt && \
+    rm /requirements.txt
 # Run setup script
 RUN /bin/bash /setup.sh && rm /setup.sh
 

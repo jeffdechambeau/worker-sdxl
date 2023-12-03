@@ -3,8 +3,11 @@
 # Stop script on error
 set -e
 
+# Update System
+apt-get update && apt-get upgrade -y
+
 # Install System Dependencies
-apt-get update && apt-get install -y --no-install-recommends \
+apt-get install -y --no-install-recommends \
     software-properties-common \
     curl \
     git \
@@ -15,13 +18,11 @@ apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python 3.10
 add-apt-repository ppa:deadsnakes/ppa -y
-apt-get update && apt-get install -y python3.10 python3.10-dev python3.10-distutils
-
-# Update Python 3 alternatives to point to Python 3.10
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+apt-get update && apt-get install -y --no-install-recommends python3.10 python3.10-dev python3.10-distutils
 
 # Install pip for Python 3.10
-apt-get install -y python3-pip
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3.10 get-pip.py
 
 # Clean up
-apt-get clean -y && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /get-pip.py
