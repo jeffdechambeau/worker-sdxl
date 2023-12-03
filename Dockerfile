@@ -106,8 +106,6 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 
 WORKDIR /
 
-# Copy the scripts
-COPY --chmod=755 scripts/* ./
 
 # Copy the accelerate configuration
 COPY builder/accelerate.yaml ./
