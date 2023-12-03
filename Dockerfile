@@ -20,7 +20,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python dependencies
 COPY builder/requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt && rm /requirements.txt
-RUN accelerate config --num_processes 4 --num_machines 1 --mixed_precision yes --dynamo_backend yes
+#COPY builder/accelerate.yaml /accelerate.yaml
+COPY builder/accelerate.yaml  ~/.cache/huggingface/accelerate/default_config.yaml
+#RUN accelerate config --config_file accelerate.yaml
+ 
 
 
 # Add src files
