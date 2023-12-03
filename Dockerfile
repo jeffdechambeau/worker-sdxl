@@ -22,6 +22,8 @@ RUN pip install --no-cache-dir -r /requirements.txt && rm /requirements.txt
 
 # Add src files
 ADD src .
+RUN ln -s /runpod-volume /workspace
+
 
 # Set permissions and specify the command to run
 RUN chmod +x /start.sh
