@@ -7,8 +7,6 @@ git+https://github.com/mlfoundations/open_clip.git
 git+https://github.com/TencentARC/GFPGAN.git
 
 
-runpod==1.3.3
-opencv-python-headless==4.8.1.78
 Pillow==9.5.0
 scikit-image==0.21.0
 
