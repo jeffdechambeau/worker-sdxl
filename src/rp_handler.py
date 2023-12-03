@@ -1,4 +1,3 @@
-
 from tasks.generate import generate, wait_for_service
 from tasks.train import run_training
 
@@ -11,14 +10,24 @@ automatic_session = requests.Session()
 
 
 def handler(event):
-    if event["method"].upper() == "GET":
+    method = event.get("method", "").upper()
+    if method == "GET":
         endpoint = event.get("endpoint", "")
+        if not endpoint:
+            return {"error": "No endpoint specified for GET request."}
+
         uri = f'{LOCAL_URL}/{endpoint}'
-        response = automatic_session.get(uri, timeout=600)
-        return response.json()
+        try:
+            response = automatic_session.get(uri, timeout=600)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            return {"error": str(e)}
 
     data = event.get('input', {})
-    api_name = data['api_name']
+    api_name = data.get('api_name', '')
+    if not api_name:
+        return {"error": "No API name specified in the request data."}
 
     print(f"Received API call: {api_name}")
 
