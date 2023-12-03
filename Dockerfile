@@ -110,6 +110,7 @@ WORKDIR /
 # Copy the accelerate configuration
 COPY builder/accelerate.yaml ./
 COPY src/* ./
+RUN chmod +x /start.sh
 
 
 # Start the container
