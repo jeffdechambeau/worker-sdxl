@@ -15,7 +15,7 @@ scikit-image==0.21.0
 # PyTorch and TensorFlow
 torch
 torchvision --extra-index-url https://download.pytorch.org/whl/cu118 
-xformers==0.0.21 
+xformers
 bitsandbytes==0.41.1
 tensorboard==2.14.1 
 tensorflow==2.14.0 
@@ -88,6 +88,6 @@ numexpr
 pyfunctional
 insightface==0.7.3
 python-socketio
-lama-cleaner
+lama_cleaner
 send2trash
 ZipUnicode
