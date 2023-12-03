@@ -86,5 +86,6 @@ pyfunctional
 insightface==0.7.3
 python-socketio
 lama_cleaner
+lama-cleaner
 send2trash
 ZipUnicode

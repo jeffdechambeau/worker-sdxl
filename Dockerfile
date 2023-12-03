@@ -1,5 +1,6 @@
 # Base image
-FROM python:3.10-slim-buster
+#FROM python:3.10-slim-buster
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
 
 # Set the working directory
 WORKDIR /
