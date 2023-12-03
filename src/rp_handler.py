@@ -1,44 +1,25 @@
-import os
-import torch
 
-from diffusers.utils import load_image
+from tasks.generate import generate, wait_for_service
+from tasks.train import run_training
 import runpod
 
-from runpod.serverless.utils.rp_validator import validate
-from rp_schemas import INPUT_SCHEMA
 
-from handler.helpers import _save_and_upload_images 
-from handler.generate import generate_with_model
+def handler(event):
+    data = event.get('input', {})
+    api_name = data['api_name']
+    print(f"Received API call: {api_name}")
 
-torch.cuda.empty_cache()
+    if api_name == 'dreambooth':
+        return run_training(data)
 
-
-def process_input(job):
-    validated_input = validate(job["input"], INPUT_SCHEMA)
-    if 'errors' in validated_input:
-        return None, {"error": validated_input['errors']}
-    job_input = validated_input['validated_input']
-    job_input['seed'] = job_input.get('seed') or int.from_bytes(os.urandom(2), "big")
-    return job_input, None
+    json = generate(event)
+    return json
 
 
-@torch.inference_mode()
-def generate_image(job):
-    job_input, error = process_input(job)
-    if error:
-        return error
+if __name__ == "__main__":
+    # wait_for_service()
 
-    generator = torch.Generator("cuda").manual_seed(job_input['seed'])
-    init_image = load_image(job_input['image_url']).convert("RGB") if job_input['image_url'] else None
+    print("WebUI API Service is ready. Starting RunPod...")
 
-    output = generate_with_model(job_input, generator, init_image)
-    image_urls = _save_and_upload_images(output, job['id'])
-
-    return {
-        "images": image_urls,
-        "image_url": image_urls[0],
-        "seed": job_input['seed'],
-        "refresh_worker": bool(init_image)
-    }
-
-runpod.serverless.start({"handler": generate_image})
+    runpod.serverless.start({"handler": handler,
+                             "return_aggregate_stream": True})

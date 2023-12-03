@@ -1,3 +1,4 @@
+
 size_config = {
     "small": {
         "3:2": {"height": 340, "width": 512},
