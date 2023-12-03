@@ -140,6 +140,7 @@ def make_caption_command(directory):
 
 def run_training(input_json):
 
+    print("Training input: ", input_json)
     username = input_json['username']
     images = input_json['images']
     resolution = input_json['training_resolution']
@@ -158,4 +159,7 @@ def run_training(input_json):
 
           """)
     subprocess.run(training_command, shell=True, check=True)
+
+    print("Todo: clean up training folder")
+    print("Training finished.")
     return training_command

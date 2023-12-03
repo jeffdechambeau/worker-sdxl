@@ -9,19 +9,18 @@ retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
 automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 
 
-def generate(event):
-    if event["method"].upper() == "GET":
-        endpoint = event.get("endpoint", "")
-        response = automatic_session.get(
-            f'{LOCAL_URL}/{endpoint}', timeout=600)
-    else:  # Default to POST
-        api_name = event.get("api_name", "sdapi/txt2img")
-        response = automatic_session.post(
-            f'{LOCAL_URL}/{api_name}', json=event.get("input", {}), timeout=600)
-    return response.json()
+def generate(data):
+    api_name = data["api_name"]
+    response = automatic_session.post(
+        f'{LOCAL_URL}/{api_name}', json=data.get("input", {}), timeout=600)
+    result = response.json()
+    print("Generating...")
+    print("data:", data)
+    print("result:", result)
+    return result
 
 
-def wait_for_service(url=f'{LOCAL_URL}/txt2img'):
+def wait_for_service(url=f'{LOCAL_URL}/sdapi/txt2img'):
     while True:
         try:
             requests.get(url, timeout=120)
