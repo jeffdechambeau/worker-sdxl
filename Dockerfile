@@ -26,18 +26,15 @@ RUN apt update && apt -y upgrade && apt install -y --no-install-recommends \
 
 # Set Python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
-
-# Install Torch, xformers, and tensorrt
-RUN pip3 install --no-cache-dir torch==2.0.1 torchvision torchaudio torchmetrics --index-url https://download.pytorch.org/whl/cu118 && \
-    pip3 install --no-cache-dir xformers==0.0.22 tensorrt && \
-    pip3 install runpod && \
-    pip3 install accelerate  diffusers omegaconf transformers kornia open-clip-torch voluptuous && \
-    pip3 install toml gradio einops opencv-python scipy && \
-    pip3 cache purge
-
+RUN ln -s /runpod-volume /workspace
 
 # Stage 2: Install applications
 FROM base as setup
+
+COPY builder/* ./
+RUN pip3 --no-cache-dir install -r requirements.txt
+
+
 
 WORKDIR /
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
@@ -45,7 +42,7 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     git checkout tags/${WEBUI_VERSION}
 
 WORKDIR /stable-diffusion-webui
-RUN python3 -m venv --system-site-packages /venv && \
+RUN python3 -m venv --system-site-packages venv && \
     source /venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     deactivate
@@ -111,12 +108,7 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 
 WORKDIR /
 
-COPY builder/accelerate.yaml ./
-
-RUN ln -s /runpod-volume /workspace
-
 COPY src .
-
 RUN chmod +x /start.sh
 
 # Start the container

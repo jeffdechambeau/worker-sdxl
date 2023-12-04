@@ -10,16 +10,17 @@ git+https://github.com/TencentARC/GFPGAN.git
 Pillow==9.5.0
 scikit-image==0.21.0
 
-# PyTorch and TensorFlow
-torch
-torchvision --extra-index-url https://download.pytorch.org/whl/cu118 
-bitsandbytes
-tensorboard
-tensorflow
+torch==2.0.1+cu118 
+torchvision==0.16.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage
+xformers==0.0.22 
+bitsandbytes==0.41.1
+tensorboard==2.14.1 
+tensorflow==2.14.0 
+wheel
 tensorrt
 
+
 # Machine Learning Libraries
-xformers==0.0.22
 accelerate
 basicsr==1.4.2
 einops==0.6.0  
@@ -27,8 +28,8 @@ gradio==3.41.2
 kornia==0.6.7
 numpy==1.23.5
 omegaconf==2.2.3
-pytorch-lightning  # Version aligned with torch
-pytorch_lightning==1.9.4
+lightning-utilities
+pytorch-lightning==1.9.4
 realesrgan==0.3.0
 safetensors==0.3.1
 timm==0.6.12  # Latest version chosen
@@ -85,7 +86,6 @@ numexpr
 pyfunctional
 insightface==0.7.3
 python-socketio
-lama_cleaner
 lama-cleaner
 send2trash
 ZipUnicode
