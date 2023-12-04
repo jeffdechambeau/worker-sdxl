@@ -12,9 +12,6 @@ git+https://github.com/TencentARC/GFPGAN.git
 Pillow
 scikit-image
 
-torch==2.1.0+cu118 torchvision --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage
-
-xformers
 bitsandbytes
 tensorboard
 tensorflow

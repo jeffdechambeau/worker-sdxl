@@ -31,10 +31,12 @@ RUN ln -s /runpod-volume /workspace
 # Stage 2: Install applications
 FROM base as setup
 
+# Install Torch, xformers and tensorrt
+RUN pip3 install --no-cache-dir torch==2.0.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 && \
+    pip3 install --no-cache-dir xformers==0.0.22 tensorrt
+
 COPY builder/* ./
 RUN pip3 --no-cache-dir install -r requirements.txt
-
-
 
 WORKDIR /
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
