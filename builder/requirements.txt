@@ -26,7 +26,6 @@ kornia
 numpy
 omegaconf
 lightning-utilities
-pytorch-lightning==1.8.*
 realesrgan
 safetensors
 timm
