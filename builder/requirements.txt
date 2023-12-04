@@ -68,7 +68,6 @@ lycoris-lora
 onnx
 onnxruntime-gpu
 protobuf
-open-clip-torch==2.23.0
 opencv-python
 prodigyopt
 tk
