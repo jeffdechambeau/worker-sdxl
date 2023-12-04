@@ -138,6 +138,30 @@ def make_caption_command(directory):
     return command
 
 
+def inspect_path(path):
+    if not os.path.exists(path):
+        print("The path does not exist.")
+        return None
+
+    if os.path.isfile(path):
+        size = os.path.getsize(path)
+        print(f"File Size: {size} bytes")
+        return size
+    elif os.path.isdir(path):
+        contents = os.listdir(path)
+        print("Directory contents:")
+        for item in contents:
+            print(item)
+        return contents
+    else:
+        print("It is neither a file nor a directory.")
+        return None
+
+
+# Example usage
+result = inspect_path('/your/path/here')
+
+
 def run_training(input_json):
 
     print("Training input: ", input_json)
@@ -147,6 +171,10 @@ def run_training(input_json):
     token_name = input_json['token']
     class_name = input_json['class']
     model_path = input_json['model_path']
+    inspect = input_json['inspect_path'] if 'inspect_path' in input_json else None
+
+    if inspect:
+        return inspect_path(inspect)
 
     training_folder = prepare_folder(username, images, token_name, class_name)
     print(f"Training folder: {training_folder}")
