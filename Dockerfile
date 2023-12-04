@@ -28,7 +28,7 @@ RUN apt update && apt -y upgrade && apt install -y --no-install-recommends \
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
 # Install Torch, xformers, and tensorrt
-RUN pip3 install --no-cache-dir torch==2.0.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 && \
+RUN pip3 install --no-cache-dir torch==2.0.1 torchvision torchaudio torchmetrics --index-url https://download.pytorch.org/whl/cu118 && \
     pip3 install --no-cache-dir xformers==0.0.22 tensorrt && \
     pip3 install runpod && \
     pip3 install accelerate pytorch_lightning==1.7.7 diffusers omegaconf transformers kornia open-clip-torch voluptuous && \
