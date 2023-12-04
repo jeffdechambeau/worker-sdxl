@@ -6,7 +6,7 @@ import io
 import requests
 from PIL import Image
 
-pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL_beta.safetensors"
+pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/runDiffusionXL.safetensors"
 train_data_dir_base = '/workspace/witit-custom/active_training'
 logging_dir = "/workspace/logs/"
 script_path = '/workspace/kohya_ss/sdxl_train.py'
@@ -81,13 +81,13 @@ def make_command_from_json(json_data):
     return f' {" ".join(command)}'
 
 
-def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training"):
+def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training", model_path=pretrained_model_path):
     output_dir = f'/workspace/witit-custom/checkpoints/{username}'
 
     config = {
         "num_cpu_threads_per_process": 4,
         "script": script_path,
-        "pretrained_model_name_or_path": pretrained_model_path,
+        "pretrained_model_name_or_path": model_path,
         "train_data_dir": train_data_dir,
         "resolution": resolution,
         "output_dir": output_dir,
@@ -146,11 +146,12 @@ def run_training(input_json):
     resolution = input_json['training_resolution']
     token_name = input_json['token']
     class_name = input_json['class']
+    model_path = input_json['model_path']
 
     training_folder = prepare_folder(username, images, token_name, class_name)
     print(f"Training folder: {training_folder}")
     images_folder = os.path.join(train_data_dir_base, username, "img")
-    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder)}"
+    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
 
     print(f""" 
           Training command:
