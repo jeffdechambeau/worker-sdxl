@@ -6,7 +6,7 @@ import io
 import requests
 from PIL import Image
 
-pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/runDiffusionXL.safetensors"
+pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL_beta.safetensors"
 train_data_dir_base = '/workspace/witit-custom/active_training'
 logging_dir = "/workspace/logs/"
 script_path = '/workspace/kohya_ss/sdxl_train.py'
@@ -149,7 +149,8 @@ def run_training(input_json):
 
     training_folder = prepare_folder(username, images, token_name, class_name)
     print(f"Training folder: {training_folder}")
-    training_command = f"accelerate launch {make_train_command(username, resolution, training_folder)}"
+    images_folder = os.path.join(train_data_dir_base, username, "img")
+    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder)}"
 
     print(f""" 
           Training command:
