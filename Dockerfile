@@ -86,7 +86,7 @@ RUN curl https://rclone.org/install.sh | bash && \
     curl https://getcroc.schollz.com | bash
 
 # ADD SDXL styles.csv
-ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
+ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /workspace/stable-diffusion-webui/styles.csv
 
 # Fix Tensorboard
 RUN pip3 uninstall -y tensorboard tb-nightly && \
