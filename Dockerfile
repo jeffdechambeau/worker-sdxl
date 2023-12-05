@@ -28,7 +28,7 @@ FROM base as setup
 #RUN pip3 --no-cache-dir install -r requirements.txt && \ pip3 cache purge
 
 WORKDIR /
-RUN echo "Installing stable-diffusion-webui and A1111 Extensions" && \
+RUN echo "Installing A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
     python3 -m venv --system-site-packages venv && \
@@ -36,7 +36,9 @@ RUN echo "Installing stable-diffusion-webui and A1111 Extensions" && \
     pip3 install --no-cache-dir -r requirements.txt && \
     deactivate
 
-RUN cd /stable-diffusion-webui && \
+RUN echo "Installing A111 extensions" && \
+    cd /stable-diffusion-webui && \
+    source venv/bin/activate && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
