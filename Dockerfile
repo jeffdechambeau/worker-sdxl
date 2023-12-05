@@ -37,7 +37,7 @@ FROM base as setup
 # Install Torch, xformers and tensorrt
 RUN pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchmetrics==0.11.4 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage && \
     pip3 install --no-cache-dir xformers==0.0.22 tensorrt && pytorch-lightning==1.8.*  open-clip-torch==2.18.0 && \ 
-    pip3 install --no-cache-dir torchdiffeq torchsde transformers
+    pip4 install --no-cache-dir torchdiffeq torchsde transformers && \
     pip3 cache purge
 
 # Install requirements
