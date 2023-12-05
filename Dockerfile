@@ -11,7 +11,7 @@ WORKDIR /
 # Installing essential tools and libraries
 RUN apt update && \
     apt install -y --no-install-recommends \
-        build-essential software-properties-common python3-pip python3-dev nodejs npm \
+        build-essential software-properties-common python3-pip python3.10-venv nodejs npm \
         git wget curl vim zip unzip && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* && \
