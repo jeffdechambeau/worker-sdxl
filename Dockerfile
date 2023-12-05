@@ -8,7 +8,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /
 
-RUN echo "Update Apt-Get & Install system deps" && \
+RUN echo "Update apt-get & install system deps" && \
     apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3.10-venv python3-pip python3-tk python3-dev nodejs npm \
@@ -36,6 +36,9 @@ RUN echo "Installing stable-diffusion-webui and A1111 Extensions" && \
     python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
+    deactivate
+
+RUN cd /stable-diffusion-webui && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
@@ -61,16 +64,6 @@ RUN echo "Installing misc extras" && \
     mv runpodctl /usr/local/bin
 
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
-
-
-RUN echo "Installing core ML stuff & Fixing Tensorboard" && \
-    pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchmetrics==0.11.4 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage && \
-    pip3 install --no-cache-dir xformers==0.0.22 tensorrt && pytorch-lightning==1.8.*  open-clip-torch==2.18.0 && \ 
-    pip3 install --no-cache-dir torchdiffeq torchsde transformers && \
-    pip3 uninstall -y tensorboard tb-nightly && \
-    pip3 install tensorboard tensorflow && \
-    pip3 cache purge 
-
 
 COPY src .
 RUN ln -s /runpod-volume /workspace && \
