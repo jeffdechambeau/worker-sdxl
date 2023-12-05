@@ -11,7 +11,7 @@ WORKDIR /
 # Installing essential tools and libraries
 RUN apt update && \
     apt install -y --no-install-recommends \
-        build-essential software-properties-common python3-pip python3.10-venv nodejs npm \
+        build-essential software-properties-common python3-pip python3.10-venv \
         git wget curl vim zip unzip \
         libgl1 && \
     apt clean && \
@@ -23,12 +23,20 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
 FROM base as setup
 
-
-
 #RUN echo "Installing requirements.txt"
 #COPY builder/* . 
 #RUN pip3 --no-cache-dir install -r requirements.txt && \ pip3 cache purge
 RUN python3 -m venv --system-site-packages /venv
+
+RUN echo "Installing Kohya_ss" && \
+    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
+    cd /kohya_ss && \
+    source /venv/bin/activate && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install opencv-python bitsandbytes scipy && \
+    pip3 install . && \
+    pip3 cache purge && \
+    deactivate
 
 RUN echo "Installing A1111" && \
     source /venv/bin/activate && \
@@ -56,23 +64,12 @@ RUN echo "Installing ControlNet" && \
     pip3 cache purge && \
     deactivate
 
-ADD https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 /stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL_beta.safetensors
-
-RUN echo "Installing Kohya_ss" && \
-    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
-    cd /kohya_ss && \
-    source /venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 install opencv-python bitsandbytes scipy && \
-    pip3 install . && \
-    pip3 cache purge && \
-    deactivate
-
 RUN echo "Installing misc extras" && \
     wget https://github.com/runpod/runpodctl/releases/download/v1.10.0/runpodctl-linux-amd -O runpodctl && \
     chmod a+x runpodctl && \
     mv runpodctl /usr/local/bin
 
+ADD https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 /stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
 COPY src .
