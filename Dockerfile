@@ -9,6 +9,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /
 
 RUN echo "Update Apt-Get & Install system deps" && \
+    apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3.10-venv python3-pip python3-tk python3-dev nodejs npm \
         bash dos2unix git git-lfs ncdu nginx net-tools inetutils-ping openssh-server libglib2.0-0 libsm6 libgl1 \
@@ -69,6 +70,7 @@ RUN echo "Installing core ML stuff & Fixing Tensorboard" && \
     pip3 uninstall -y tensorboard tb-nightly && \
     pip3 install tensorboard tensorflow && \
     pip3 cache purge 
+
 
 COPY src .
 RUN ln -s /runpod-volume /workspace && \
