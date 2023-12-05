@@ -41,57 +41,41 @@ RUN pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 tor
     pip3 cache purge
 
 # Install requirements
-COPY builder/requirements.txt .
+COPY builder/* . 
 RUN pip3 --no-cache-dir install -r requirements.txt && \
     pip3 cache purge
 
 # Clone and set up stable-diffusion-webui
-WORKDIR /stable-diffusion-webui
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git . && \
-    git checkout tags/${WEBUI_VERSION} && \
-    python3 -m venv --system-site-packages /venv && \
-    source /venv/bin/activate && \
+WORKDIR /workspace/stable-diffusion-webui
+
+RUN python3 -m venv --system-site-packages venv && \
+    source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
-    deactivate && \
-    pip3 cache purge
+    pip3 cache purge 
+    
 
 # Clone the Automatic1111 Extensions
 RUN git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet
 
 # Install extensions and additional packages
-RUN source /venv/bin/activate && \
-    cd extensions/sd-webui-controlnet && \
+RUN cd extensions/sd-webui-controlnet && \
     pip3 install -r requirements.txt && \
-    cd ../../extensions/adetailer && \
+    cd ../adetailer && \
     pip3 install . && \
-    pip3 install segment_anything lama_cleaner && \
-    deactivate && \
-    pip3 cache purge
-
-# Add inswapper model for the ReActor extension
-RUN mkdir -p models/insightface && \
-    cd models/insightface && \
-    wget https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128.onnx
-
-# Fix Tensorboard
-RUN source /venv/bin/activate && \
-    pip3 uninstall -y tensorboard tb-nightly && \
-    pip3 install tensorboard tensorflow && \
+    pip3 install segment_anything lama_cleaner && 
     pip3 cache purge && \
     deactivate
 
 # Install Kohya_ss
-WORKDIR /kohya_ss
-RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
-    git checkout ${KOHYA_VERSION} && \
-    python3 -m venv --system-site-packages venv && \
+WORKDIR /workspace/kohya_ss
+
+RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 install . && \
     pip3 cache purge && \
     deactivate
-
 
 
 # Additional installations
@@ -103,6 +87,11 @@ RUN curl https://rclone.org/install.sh | bash && \
 
 # ADD SDXL styles.csv
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
+
+# Fix Tensorboard
+RUN pip3 uninstall -y tensorboard tb-nightly && \
+    pip3 install tensorboard tensorflow && \
+    pip3 cache purge && \
 
 WORKDIR /
 
