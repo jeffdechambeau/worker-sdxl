@@ -51,7 +51,7 @@ RUN cd /stable-diffusion-webui/extensions/adetailer && \
     pip3 cache purge
 
 RUN cd /stable-diffusion-webui/models/Stable-diffusion && \
-    wget https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiffusionXL_beta.safetensors?dl=1 -O rundiffusionXL_beta.safetensors
+    wget https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 -O rundiffusionXL_beta.safetensors
 
 
 RUN echo "Installing Kohya_ss" && \
@@ -59,6 +59,7 @@ RUN echo "Installing Kohya_ss" && \
     cd /kohya_ss && \
     source /venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install opencv-python bitsandbytes scipy && \
     pip3 install . && \
     pip3 cache purge && \
     deactivate
@@ -72,7 +73,8 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 
 COPY src .
 
-RUN pip3 install runpod && \
+RUN source /env/bin/activate && \
+    pip3 install runpod && \
     ln -s /runpod-volume /workspace && \
     chmod +x /start.sh
 
