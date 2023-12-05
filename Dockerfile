@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 as base
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 as base
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=America/Seattle \
     PYTHONUNBUFFERED=1 \
@@ -8,17 +8,15 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /
 
-RUN echo "Update apt-get & install system deps" && \
-    apt update && \
+# Installing essential tools and libraries
+RUN apt update && \
     apt install -y --no-install-recommends \
-        build-essential software-properties-common python3.10-venv python3-pip python3-tk python3-dev nodejs npm \
-        bash dos2unix git git-lfs ncdu nginx net-tools inetutils-ping openssh-server libglib2.0-0 libsm6 libgl1 \
-        libxrender1 libxext6 ffmpeg wget curl psmisc rsync vim zip unzip p7zip-full htop pkg-config plocate \
-        libcairo2-dev libgoogle-perftools4 libtcmalloc-minimal4 apt-transport-https ca-certificates && \
-    update-ca-certificates && \
+        build-essential software-properties-common python3-pip python3-dev nodejs npm \
+        git wget curl vim zip unzip && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
@@ -66,7 +64,9 @@ RUN echo "Installing misc extras" && \
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
 COPY src .
-RUN ln -s /runpod-volume /workspace && \
+
+RUN pip3 install runpod && \
+    ln -s /runpod-volume /workspace && \
     chmod +x /start.sh
 
 SHELL ["/bin/bash", "--login", "-c"]
