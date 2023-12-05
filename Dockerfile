@@ -49,11 +49,12 @@ RUN pip3 --no-cache-dir install -r requirements.txt && \
     pip3 cache purge
 
 # Clone and set up stable-diffusion-webui
-WORKDIR /workspace/stable-diffusion-webui
 
 RUN echo "Installing stable-diffusion-webui" 
 
-RUN python3 -m venv --system-site-packages venv && \
+WORKDIR /workspace/stable-diffusion-webui
+RUN ls . && \
+    python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 cache purge 
