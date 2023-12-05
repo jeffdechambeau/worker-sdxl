@@ -63,7 +63,7 @@ RUN cd extensions/sd-webui-controlnet && \
     pip3 install -r requirements.txt && \
     cd ../adetailer && \
     pip3 install . && \
-    pip3 install segment_anything lama_cleaner && 
+    pip3 install segment_anything lama_cleaner && \
     pip3 cache purge && \
     deactivate
 
