@@ -31,6 +31,10 @@ RUN apt update && apt -y upgrade && \
 RUN ln -s /usr/bin/python3.10 /usr/bin/python && \
     ln -s /runpod-volume /workspace
 
+# Example Dockerfile snippet
+RUN echo "Checking if /workspace exists and listing contents:" && \
+    ls -la /workspace
+
 # Stage 2: Install applications
 FROM base as setup
 
