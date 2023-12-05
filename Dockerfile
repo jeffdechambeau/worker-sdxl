@@ -27,7 +27,16 @@ FROM base as setup
 #COPY builder/* . 
 #RUN pip3 --no-cache-dir install -r requirements.txt && \ pip3 cache purge
 
-WORKDIR /
+RUN echo "Installing Kohya_ss" && \
+    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
+    cd /kohya_ss && \
+    python3 -m venv --system-site-packages venv && \
+    source venv/bin/activate && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install . && \
+    pip3 cache purge && \
+    deactivate
+
 RUN echo "Installing A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
@@ -48,15 +57,6 @@ RUN echo "Installing A111 extensions" && \
     pip3 cache purge && \
     deactivate
 
-RUN echo "Installing Kohya_ss" && \
-    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
-    cd /kohya_ss && \
-    python3 -m venv --system-site-packages venv && \
-    source venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements_runpod.txt && \
-    pip3 install . && \
-    pip3 cache purge && \
-    deactivate
 
 RUN echo "Installing misc extras" && \
     wget https://github.com/runpod/runpodctl/releases/download/v1.10.0/runpodctl-linux-amd -O runpodctl && \
