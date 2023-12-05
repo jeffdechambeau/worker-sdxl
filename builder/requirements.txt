@@ -15,9 +15,7 @@ scikit-image
 bitsandbytes
 tensorboard
 tensorflow
-wheel
 tensorrt
-# Machine Learning Libraries
 accelerate
 basicsr
 einops
@@ -29,9 +27,6 @@ lightning-utilities
 realesrgan
 safetensors
 timm
-torchdiffeq
-torchsde
-transformers
 
 # CLI and Development Utilities
 # Web and Networking Libraries
