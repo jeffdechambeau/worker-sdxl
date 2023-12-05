@@ -72,7 +72,7 @@ WORKDIR /workspace/kohya_ss
 
 RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install --no-cache-dir -r requirements-runpod.txt && \
     pip3 install . && \
     pip3 cache purge && \
     deactivate
