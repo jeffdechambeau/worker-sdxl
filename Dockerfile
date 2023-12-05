@@ -35,6 +35,7 @@ RUN echo "Installing A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
     pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 cache purge && \
     deactivate
 
 RUN echo "Installing Adetailer" && \
@@ -52,12 +53,10 @@ RUN echo "Installing ControlNet" && \
     source /venv/bin/activate && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
+    pip3 cache purge && \
     deactivate
 
-
-# RUN cd /stable-diffusion-webui/models/Stable-diffusion
- # && \    wget https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 -O rundiffusionXL_beta.safetensors
-
+ADD https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 /stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL_beta.safetensors
 
 RUN echo "Installing Kohya_ss" && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
