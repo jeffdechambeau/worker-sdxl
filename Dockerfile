@@ -50,10 +50,6 @@ RUN cd /stable-diffusion-webui/extensions/adetailer && \
     pip3 install segment_anything lama_cleaner && \
     pip3 cache purge
 
-RUN cd /stable-diffusion-webui/models/Stable-diffusion && \
-    wget https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 -O rundiffusionXL_beta.safetensors
-
-
 RUN echo "Installing Kohya_ss" && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
     cd /kohya_ss && \
