@@ -34,6 +34,8 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python && \
 # Stage 2: Install applications
 FROM base as setup
 
+RUN echo "Installing core ML cuda jazz"
+
 # Install Torch, xformers and tensorrt
 RUN pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchmetrics==0.11.4 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage && \
     pip3 install --no-cache-dir xformers==0.0.22 tensorrt && pytorch-lightning==1.8.*  open-clip-torch==2.18.0 && \ 
@@ -41,12 +43,15 @@ RUN pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 tor
     pip3 cache purge
 
 # Install requirements
+RUN echo "Installing requirements.txt"
 COPY builder/* . 
 RUN pip3 --no-cache-dir install -r requirements.txt && \
     pip3 cache purge
 
 # Clone and set up stable-diffusion-webui
 WORKDIR /workspace/stable-diffusion-webui
+
+RUN echo "Installing stable-diffusion-webui" 
 
 RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
@@ -59,6 +64,8 @@ RUN git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adet
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet
 
 # Install extensions and additional packages
+
+RUN echo "Installing extensions and additional packages"
 RUN cd extensions/sd-webui-controlnet && \
     pip3 install -r requirements.txt && \
     cd ../adetailer && \
@@ -70,6 +77,8 @@ RUN cd extensions/sd-webui-controlnet && \
 # Install Kohya_ss
 WORKDIR /workspace/kohya_ss
 
+RUN echo "Installing Kohya_ss"
+
 RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements-runpod.txt && \
@@ -77,6 +86,7 @@ RUN python3 -m venv --system-site-packages venv && \
     pip3 cache purge && \
     deactivate
 
+RUN echo "runpodctl"
 
 # Additional installations
 RUN curl https://rclone.org/install.sh | bash && \
@@ -89,6 +99,7 @@ RUN curl https://rclone.org/install.sh | bash && \
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /workspace/stable-diffusion-webui/styles.csv
 
 # Fix Tensorboard
+RUN echo "Fixing Tensorboard"
 RUN pip3 uninstall -y tensorboard tb-nightly && \
     pip3 install tensorboard tensorflow && \
     pip3 cache purge 
