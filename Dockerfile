@@ -8,7 +8,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /
 
-# Installing essential tools and libraries
 RUN apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3-pip python3.10-venv \
@@ -18,14 +17,10 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
+FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-FROM base as setup
-
-#RUN echo "Installing requirements.txt"
-#COPY builder/* . 
-#RUN pip3 --no-cache-dir install -r requirements.txt && \ pip3 cache purge
 RUN python3 -m venv --system-site-packages /venv
 
 RUN echo "Installing Kohya_ss" && \
