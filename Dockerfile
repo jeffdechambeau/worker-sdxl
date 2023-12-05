@@ -9,7 +9,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /
 
 RUN echo "Update Apt-Get & Install system deps" && \
-    apt update && apt -y upgrade && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3.10-venv python3-pip python3-tk python3-dev nodejs npm \
         bash dos2unix git git-lfs ncdu nginx net-tools inetutils-ping openssh-server libglib2.0-0 libsm6 libgl1 \
@@ -23,12 +22,7 @@ RUN echo "Update Apt-Get & Install system deps" && \
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
 FROM base as setup
-RUN echo "Installing core ML cuda jazz"
 
-RUN pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchmetrics==0.11.4 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage && \
-    pip3 install --no-cache-dir xformers==0.0.22 tensorrt && pytorch-lightning==1.8.*  open-clip-torch==2.18.0 && \ 
-    pip3 install --no-cache-dir torchdiffeq torchsde transformers && \
-    pip3 cache purge
 
 #RUN echo "Installing requirements.txt"
 #COPY builder/* . 
@@ -51,11 +45,11 @@ RUN echo "Installing stable-diffusion-webui and A1111 Extensions" && \
     deactivate
 
 RUN echo "Installing Kohya_ss" && \
-    git clone https://github.com/bmaltais/kohya_ss.git && \
-    cd kohya_ss && \
+    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
+    cd /kohya_ss && \
     python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements-runpod.txt && \
+    pip3 install --no-cache-dir -r requirements_runpod.txt && \
     pip3 install . && \
     pip3 cache purge && \
     deactivate
@@ -65,13 +59,16 @@ RUN echo "Installing misc extras" && \
     chmod a+x runpodctl && \
     mv runpodctl /usr/local/bin
 
-ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /workspace/stable-diffusion-webui/styles.csv
+ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
-RUN echo "Fixing Tensorboard" && \
+
+RUN echo "Installing core ML stuff & Fixing Tensorboard" && \
+    pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchmetrics==0.11.4 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage && \
+    pip3 install --no-cache-dir xformers==0.0.22 tensorrt && pytorch-lightning==1.8.*  open-clip-torch==2.18.0 && \ 
+    pip3 install --no-cache-dir torchdiffeq torchsde transformers && \
     pip3 uninstall -y tensorboard tb-nightly && \
     pip3 install tensorboard tensorflow && \
     pip3 cache purge 
-
 
 COPY src .
 RUN ln -s /runpod-volume /workspace && \
