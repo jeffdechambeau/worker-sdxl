@@ -31,9 +31,9 @@ FROM base as setup
 RUN python3 -m venv --system-site-packages /venv
 
 RUN echo "Installing A1111" && \
-    cd /stable-diffusion-webui && \
     source /venv/bin/activate && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
+    cd /stable-diffusion-webui && \
     pip3 install --no-cache-dir -r requirements.txt && \
     deactivate
 
@@ -44,13 +44,16 @@ RUN echo "Installing Adetailer" && \
     cd /stable-diffusion-webui/extensions/adetailer && \
     pip3 install . && \
     pip3 install segment_anything lama_cleaner && \
-    pip3 cache purge
+    pip3 cache purge && \
+    deactivate
 
 RUN echo "Installing ControlNet" && \
     cd /stable-diffusion-webui && \
     source /venv/bin/activate && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
-    pip3 install -r extensions/sd-webui-controlnet/requirements.txt
+    pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
+    deactivate
+
 
 # RUN cd /stable-diffusion-webui/models/Stable-diffusion
  # && \    wget https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 -O rundiffusionXL_beta.safetensors
