@@ -91,7 +91,7 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 # Fix Tensorboard
 RUN pip3 uninstall -y tensorboard tb-nightly && \
     pip3 install tensorboard tensorflow && \
-    pip3 cache purge && \
+    pip3 cache purge 
 
 WORKDIR /
 
