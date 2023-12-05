@@ -12,7 +12,8 @@ WORKDIR /
 RUN apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3-pip python3.10-venv nodejs npm \
-        git wget curl vim zip unzip && \
+        git wget curl vim zip unzip \
+        libgl1 && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
@@ -45,6 +46,8 @@ RUN echo "Installing A111 extensions" && \
     pip3 install . && \
     pip3 install segment_anything lama_cleaner && \
     pip3 cache purge && \
+    cd /stable-diffusion-webui/models/Stable-diffusion && \
+    wget https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiffusionXL_beta.safetensors?rlkey=2674n1a85jns6opu3wacp9haq&dl=1 -O rundiffusionXL_beta.safetensors && \
     deactivate
 
 RUN echo "Installing Kohya_ss" && \
