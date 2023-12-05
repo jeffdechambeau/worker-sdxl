@@ -181,7 +181,7 @@ def run_training(input_json):
     images_folder = os.path.join(train_data_dir_base, username, "img")
     training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
 
-    full_command = f"""source /workspace/kohya_ss/venv/bin/activate && \
+    full_command = f"""source /venv/bin/activate && \
     {training_command}
 
 """
