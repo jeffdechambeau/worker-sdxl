@@ -24,31 +24,37 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python
 FROM base as setup
 
 
+
 #RUN echo "Installing requirements.txt"
 #COPY builder/* . 
 #RUN pip3 --no-cache-dir install -r requirements.txt && \ pip3 cache purge
+RUN python3 -m venv --system-site-packages /venv
 
 RUN echo "Installing A1111" && \
-    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
-    python3 -m venv --system-site-packages /venv && \
     source /venv/bin/activate && \
+    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     pip3 install --no-cache-dir -r requirements.txt && \
     deactivate
 
-RUN echo "Installing A111 extensions" && \
+RUN echo "Installing Adetailer" && \
     cd /stable-diffusion-webui && \
     source /venv/bin/activate && \
-    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer
-
-RUN cd /stable-diffusion-webui && \
-    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
-    pip3 install -r extensions/sd-webui-controlnet/requirements.txt
-
-RUN cd /stable-diffusion-webui/extensions/adetailer && \
+    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \ 
+    cd /stable-diffusion-webui/extensions/adetailer && \
     pip3 install . && \
     pip3 install segment_anything lama_cleaner && \
     pip3 cache purge
+
+RUN echo "Installing ControlNet" && \
+    cd /stable-diffusion-webui && \
+    source /venv/bin/activate && \
+    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
+    pip3 install -r extensions/sd-webui-controlnet/requirements.txt
+
+# RUN cd /stable-diffusion-webui/models/Stable-diffusion
+ # && \    wget https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 -O rundiffusionXL_beta.safetensors
+
 
 RUN echo "Installing Kohya_ss" && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
@@ -69,7 +75,7 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 
 COPY src .
 
-RUN source /env/bin/activate && \
+RUN source /venv/bin/activate && \
     pip3 install runpod && \
     ln -s /runpod-volume /workspace && \
     chmod +x /start.sh
