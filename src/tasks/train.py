@@ -182,7 +182,8 @@ def run_training(input_json):
     training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
 
     full_command = f"""source /venv/bin/activate && \
-    {training_command}
+    {training_command} && \ 
+    deactivate
 
 """
     print(f""" 
@@ -190,7 +191,7 @@ def run_training(input_json):
           
           {full_command}
           """)
-    subprocess.run(full_command, shell=True, check=True)
+    subprocess.run(f"bash -c '{full_command}'", shell=True, check=True)
 
     print("Todo: clean up training folder")
     print("Training finished.")
