@@ -34,7 +34,8 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python && \
 # Stage 2: Install applications
 FROM base as setup
 
-RUN echo "Installing core ML cuda jazz"
+RUN echo "Installing core ML cuda jazz" && \
+    ls /workspace 
 
 # Install Torch, xformers and tensorrt
 RUN pip3 install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchmetrics==0.11.4 --extra-index-url https://download.pytorch.org/whl/cu118 # no_verify leave this to specify not checking this a verification stage && \
@@ -53,7 +54,7 @@ RUN pip3 --no-cache-dir install -r requirements.txt && \
 RUN echo "Installing stable-diffusion-webui" 
 
 WORKDIR /workspace/stable-diffusion-webui
-RUN ls . && \
+RUN ls && \
     python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
