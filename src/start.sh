@@ -1,7 +1,6 @@
 #!/bin/bash
 
 echo "Worker Initiated"
-
 echo "Starting WebUI API"
 
 source /venv/bin/activate

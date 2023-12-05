@@ -6,8 +6,9 @@ import io
 import requests
 from PIL import Image
 
-pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/runDiffusionXL.safetensors"
+pretrained_model_path = "/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
 train_data_dir_base = '/workspace/witit-custom/active_training'
+# train_data_dir_base = '/Users/jds/code/upwork/Nathaniel/worker-sdxl/tmpenv'
 logging_dir = "/workspace/logs/"
 script_path = '/workspace/kohya_ss/sdxl_train.py'
 
@@ -83,6 +84,7 @@ def make_command_from_json(json_data):
 
 def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training", model_path=pretrained_model_path):
     output_dir = f'/workspace/witit-custom/checkpoints/{username}'
+    print(f"Output dir: {output_dir}")
 
     config = {
         "num_cpu_threads_per_process": 4,
@@ -158,13 +160,9 @@ def inspect_path(path):
         return None
 
 
-# Example usage
-result = inspect_path('/your/path/here')
-
-
 def run_training(input_json):
 
-    print("Training input: ", input_json)
+    # print("Training input: ", input_json)
     username = input_json['username']
     images = input_json['images']
     resolution = input_json['training_resolution']
@@ -181,18 +179,16 @@ def run_training(input_json):
     images_folder = os.path.join(train_data_dir_base, username, "img")
     training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
 
-    full_command = f"""source /venv/bin/activate && \
-    {training_command} && \ 
-    deactivate
+    full_command = f"""source /venv/bin/activate && {training_command} && deactivate"""
 
-"""
     print(f""" 
           Full training command:
           
           {full_command}
           """)
-    subprocess.run(f"bash -c '{full_command}'", shell=True, check=True)
+    results = subprocess.run(
+        f"bash -c '{full_command}'", shell=True, check=True)
 
     print("Todo: clean up training folder")
     print("Training finished.")
-    return full_command
+    return results
