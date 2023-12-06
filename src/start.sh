@@ -3,7 +3,8 @@
 echo "Worker Initiated"
 echo "Starting WebUI API"
 
-source /venv/bin/activate
+cd /stable-diffusion-webui
+source venv/bin/activate
 
 # We start the SD generation webui in the background and redirect the output to a log file
 python3.10 /stable-diffusion-webui/webui.py \ 

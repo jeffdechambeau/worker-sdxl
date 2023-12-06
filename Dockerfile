@@ -71,8 +71,7 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 
 COPY src .
 
-RUN source /venv/bin/activate && \
-    pip3 install runpod && \
+RUN pip3 install runpod && \
     ln -s /runpod-volume /workspace && \
     chmod +x /start.sh
 
