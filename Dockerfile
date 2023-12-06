@@ -70,7 +70,7 @@ ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.c
 COPY src .
 
 RUN source /stable-diffusion-webui/venv/bin/activate && \
-    pip3 installl xformers && \ 
+    pip3 install xformers && \ 
     chmod +x /setup.sh && \
     /setup.sh && \
     deactivate
