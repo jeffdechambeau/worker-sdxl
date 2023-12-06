@@ -66,7 +66,14 @@ RUN echo "Installing misc extras" && \
 # ADD https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors /stable-diffusion-webui/models/VAE/sdxl_vae.safetensors
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
+
 COPY src .
+
+RUN source /stable-diffusion-webui/venv/bin/activate && \
+    pip3 installl xformers && \ 
+    chmod +x /setup.sh && \
+    /setup.sh && \
+    deactivate
 
 RUN pip3 install runpod && \
     ln -s /runpod-volume /workspace && \

@@ -1,0 +1,3 @@
+from stable_diffusion_webui.modules.launch_utils import prepare_environment
+
+prepare_environment()

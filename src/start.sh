@@ -7,7 +7,7 @@ cd /stable-diffusion-webui
 source venv/bin/activate
 
 # We start the SD generation webui in the background and redirect the output to a log file
-python3.10 /stable-diffusion-webui/launch.py
+
 python3.10 /stable-diffusion-webui/webui.py \ 
     --nowebui \
     --api \
