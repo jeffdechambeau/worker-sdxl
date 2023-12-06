@@ -65,7 +65,7 @@ RUN echo "Installing misc extras" && \
     mv runpodctl /usr/local/bin
 
 ADD https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16 /stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors
-ADD https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors /stable-diffusion-webui/models/VAE/sdxl_vae.safetensors
+# ADD https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors /stable-diffusion-webui/models/VAE/sdxl_vae.safetensors
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
 COPY src .
