@@ -30,4 +30,4 @@ def wait_for_service(url=f'{LOCAL_URL}/sdapi/txt2img'):
         except Exception as err:
             print("Error: ", err)
 
-        time.sleep(0.2)
+        time.sleep(2)

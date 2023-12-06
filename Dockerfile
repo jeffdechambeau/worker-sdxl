@@ -8,6 +8,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /
 
+
+
 RUN apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3-pip python3.10-venv \
@@ -21,29 +23,28 @@ FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-RUN python3 -m venv --system-site-packages /venv
 
 RUN echo "Installing Kohya_ss" && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
     cd /kohya_ss && \
-    source /venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 install opencv-python bitsandbytes scipy && \
     pip3 install . && \
     pip3 cache purge && \
-    deactivate
+    
 
 RUN echo "Installing A1111" && \
-    source /venv/bin/activate && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
+    python3 -m venv --system-site-packages venv && \
+    source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 cache purge && \
     deactivate
 
 RUN echo "Installing Adetailer" && \
     cd /stable-diffusion-webui && \
-    source /venv/bin/activate && \
+    source venv/bin/activate && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \ 
     cd /stable-diffusion-webui/extensions/adetailer && \
     pip3 install . && \
@@ -53,7 +54,7 @@ RUN echo "Installing Adetailer" && \
 
 RUN echo "Installing ControlNet" && \
     cd /stable-diffusion-webui && \
-    source /venv/bin/activate && \
+    source venv/bin/activate && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
     pip3 cache purge && \
