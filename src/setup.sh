@@ -1,7 +1,7 @@
 
 
 source /stable-diffusion-webui/env/bin/activate
-python3 launch.py & 
+python3 /launch.py 
 # Define file paths and URLs
 rundiffusionXL_path="/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
 rundiffusionXL_url="https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiffusionXL_beta.safetensors?rlkey=2674n1a85jns6opu3wacp9haq&dl=1"
