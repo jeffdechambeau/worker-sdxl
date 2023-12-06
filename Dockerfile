@@ -21,7 +21,7 @@ FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-COPY builder/* .
+COPY builder/* /
 
 RUN echo "Installing A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
@@ -35,7 +35,7 @@ RUN echo "Installing A1111" && \
     deactivate
 
 RUN source /stable-diffusion-webui/venv/bin/activate && \ 
-    python3 -m install-automatic.py --skip-torch-cuda-test && \
+    python3 -m install-automatic --skip-torch-cuda-test && \
     deactivate
 
 RUN echo "Installing Adetailer" && \
