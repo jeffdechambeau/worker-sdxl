@@ -8,8 +8,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /
 
-
-
 RUN apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3-pip python3.10-venv \
@@ -22,7 +20,6 @@ RUN apt update && \
 FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
-
 
 RUN echo "Installing Kohya_ss" && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
