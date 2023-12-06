@@ -71,8 +71,6 @@ COPY src .
 
 RUN source /stable-diffusion-webui/venv/bin/activate && \
     pip3 install xformers && \ 
-    chmod +x /setup.sh && \
-    /setup.sh && \
     deactivate
 
 RUN pip3 install runpod && \
