@@ -23,17 +23,17 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
 COPY builder /
 
-RUN echo "Installing A1111" && \
+RUN echo "Setting up A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
     python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 cache purge && \
-    pip3 install xformers && \ 
-    cd / && \
-    python3 -m install-automatic --skip-torch-cuda-test && \
-    pip3 cache purge && \ 
+    pip3 install xformers && \
+    # Assuming 'install-automatic.py' is in your 'builder' directory
+    python3 /builder/install-automatic.py --skip-torch-cuda-test && \
+    pip3 cache purge && \
     deactivate
 
 RUN echo "Installing Adetailer" && \
