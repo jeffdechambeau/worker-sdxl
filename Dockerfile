@@ -30,7 +30,7 @@ RUN echo "Installing Kohya_ss" && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 install opencv-python bitsandbytes scipy && \
     pip3 install . && \
-    pip3 cache purge && \
+    pip3 cache purge
     
 
 RUN echo "Installing A1111" && \
