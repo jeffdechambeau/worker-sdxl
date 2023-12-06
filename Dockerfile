@@ -21,7 +21,7 @@ FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-COPY builder/* /
+COPY builder /
 
 RUN echo "Installing A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
@@ -31,11 +31,9 @@ RUN echo "Installing A1111" && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 cache purge && \
     pip3 install xformers && \ 
-    pip3 cache purge && \ 
-    deactivate
-
-RUN source /stable-diffusion-webui/venv/bin/activate && \ 
+    cd / && \
     python3 -m install-automatic --skip-torch-cuda-test && \
+    pip3 cache purge && \ 
     deactivate
 
 RUN echo "Installing Adetailer" && \
