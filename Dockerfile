@@ -21,15 +21,6 @@ FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-RUN echo "Installing Kohya_ss" && \
-    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
-    cd /kohya_ss && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 install opencv-python bitsandbytes scipy && \
-    pip3 install . && \
-    pip3 cache purge
-    
-
 COPY builder/* .
 
 RUN echo "Installing A1111" && \
@@ -39,9 +30,12 @@ RUN echo "Installing A1111" && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 cache purge && \
-    python3 -m install-automatic --skip-torch-cuda-test && \
     pip3 install xformers && \ 
     pip3 cache purge && \ 
+    deactivate
+
+RUN source /stable-diffusion-webui/venv/bin/activate && \ 
+    python3 -m install-automatic.py --skip-torch-cuda-test && \
     deactivate
 
 RUN echo "Installing Adetailer" && \
@@ -71,14 +65,21 @@ RUN echo "Installing misc extras" && \
 # ADD https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors /stable-diffusion-webui/models/VAE/sdxl_vae.safetensors
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
+RUN echo "Installing Kohya_ss" && \
+    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
+    cd /kohya_ss && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install runpod opencv-python bitsandbytes scipy && \
+    pip3 install . && \
+    pip3 cache purge
+    
 
 COPY src .
 
 RUN source /stable-diffusion-webui/venv/bin/activate && \
     deactivate
 
-RUN pip3 install runpod && \
-    ln -s /runpod-volume /workspace && \
+RUN ln -s /runpod-volume /workspace && \
     chmod +x /start.sh
 
 SHELL ["/bin/bash", "--login", "-c"]
