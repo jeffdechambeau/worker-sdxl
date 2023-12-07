@@ -7,7 +7,9 @@ from utils.images import process_image
 
 train_data_dir_base = '/workspace/witit-custom/active_training'
 train_data_dir_base = '/Users/jds/code/upwork/Nathaniel/worker-sdxl/blah'
+
 logging_dir = "/workspace/logs/"
+logging_dir = "/Users/jds/code/upwork/Nathaniel/worker-sdxl/blah"
 
 
 def prepare_folder(username, images, token_name, class_name, train_data_dir_base=train_data_dir_base, repeats=40):
@@ -24,34 +26,43 @@ def prepare_folder(username, images, token_name, class_name, train_data_dir_base
 
 
 def run_training(input_json):
+    inspect = input_json.get('inspect_path')
+    if inspect:
+        return inspect_path(inspect)
+
     username = input_json['username']
     images = input_json['images']
     resolution = input_json['training_resolution']
     token_name = input_json['token']
     class_name = input_json['class']
     model_path = input_json['model_path']
-    inspect = input_json['inspect_path'] if 'inspect_path' in input_json else None
-
-    if inspect:
-        return inspect_path(inspect)
 
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
-    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
+
+    training_command = make_train_command(
+        username, resolution, images_folder, model_path)
 
     print(f"User folder: {user_folder}")
     print(f"Images folder: {images_folder}")
     print(f"Training folder: {training_folder}")
-    print(f"""Full training command:
-          
+    print(f"Full training command: {training_command}")
 
-          {training_command}
+    try:
+        os.makedirs(logging_dir, exist_ok=True)
+        with open(f"{logging_dir}kohya_ss.log", "w") as log_file:
+            results = subprocess.run(
+                ["bash", "-c", training_command],
+                stdout=log_file,
+                stderr=subprocess.STDOUT,
+                check=True
+            )
 
+        print("Training finished.")
+        delete_training_folder(user_folder)
+        return {"status": "success", "results": results}
 
-          """)
-    results = subprocess.run(
-        f"bash -c '{training_command}' > {logging_dir}kohya_ss.log 2>&1", shell=True, check=True)
-
-    delete_training_folder(training_folder)
-    print("Training finished.")
-    return results
+    except subprocess.CalledProcessError as e:
+        delete_training_folder(user_folder)
+        print(f"Error running training: {e}")
+        return {"status": "error", "error": str(e)}
