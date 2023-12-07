@@ -48,7 +48,7 @@ def run_training(input_json):
     try:
         os.makedirs(logging_dir, exist_ok=True)
         with open(f"{logging_dir}kohya_ss.log", "w") as log_file:
-            results = subprocess.run(
+            subprocess.run(
                 ["bash", "-c", training_command],
                 stdout=log_file,
                 stderr=subprocess.STDOUT,
@@ -56,8 +56,10 @@ def run_training(input_json):
             )
 
         print("Training finished.")
+        output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
+
         delete_training_folder(user_folder)
-        return {"status": "success", "results": results}
+        return {"status": "success", "custom_checkpoint_path": output_file}
 
     except subprocess.CalledProcessError as e:
         delete_training_folder(user_folder)

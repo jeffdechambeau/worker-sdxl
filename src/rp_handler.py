@@ -23,8 +23,8 @@ def handle_get_request(endpoint):
 
 
 def handle_post_request(data):
-    api_name = data.get('api_name', None)
-    username = data.get('username', None)
+    api_name = data.get('api_name')
+    username = data.get('username')
 
     if not api_name:
         return {"error": "No API name specified in the request data."}
