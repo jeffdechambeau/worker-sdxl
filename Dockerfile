@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install dependencies in a single layer
+# Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential python3-dev python3-pip python3.10-venv libopencv-dev \
     git wget curl vim zip unzip libgl1 \
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Setting up Python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-# Clone and setup A1111 and Kohya_ss repositories and dependencies
+# Clone A1111 and Kohya_ss repositories
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss
 
@@ -25,29 +25,42 @@ COPY builder .
 RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt xformers && \
+    pip3 cache purge
+
+# Run install-automatic.py with cleanup
+RUN source venv/bin/activate && \
     python3 install-automatic.py --skip-torch-cuda-test && \
     pip3 cache purge && \
-    deactivate
+    deactivate && \
+    rm -rf /root/.cache/pip
 
-# Install Adetailer and ControlNet extensions
+# Install Adetailer extension with cleanup
 RUN source venv/bin/activate && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
-    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     cd extensions/adetailer && pip3 install . segment_anything lama_cleaner && \
-    cd ../sd-webui-controlnet && pip3 install -r requirements.txt && \
     pip3 cache purge && \
-    deactivate
+    deactivate && \
+    rm -rf /root/.cache/pip
 
-# Setup Kohya_ss
+# Install ControlNet extension with cleanup
+RUN source venv/bin/activate && \
+    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
+    cd extensions/sd-webui-controlnet && pip3 install -r requirements.txt && \
+    pip3 cache purge && \
+    deactivate && \
+    rm -rf /root/.cache/pip
+
+# Setup Kohya_ss with cleanup
 WORKDIR /kohya_ss
 RUN pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy && \
     pip3 install . && \
-    pip3 cache purge
+    pip3 cache purge && \
+    rm -rf /root/.cache/pip
 
-# Download models and styles at runtime or use a separate script to reduce image size
-# ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
+# Prepare runtime environment
+COPY src /
+RUN chmod +x /start.sh
+RUN ln -s /runpod-volume /workspace
 
 WORKDIR /
-COPY src .  
-RUN chmod +x /start.sh
 CMD ["/start.sh"]
