@@ -20,7 +20,7 @@ def generate(data):
     return result
 
 
-def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/txt2img'):
+def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
     while True:
         try:
             requests.get(url, timeout=120)
