@@ -50,7 +50,6 @@ COPY src/ /
 
 RUN ln -s /runpod-volume /workspace && \
     chmod +x setup.sh && \
-    ./setup.sh && \
     chmod +x start.sh
   
 CMD ["/start.sh"]

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Starting Worker"
-#echo "Optionally grabbing models"
-#./setup.sh
+echo "Optionally grabbing models"
+./setup.sh
 
 cd /stable-diffusion-webui
 source venv/bin/activate
