@@ -10,7 +10,7 @@ WORKDIR /
 
 RUN apt update && \
     apt install -y --no-install-recommends \
-        build-essential software-properties-common python3-pip python3.10-venv libopencv-dev \
+        build-essential software-properties-common python3-dev python3-pip python3.10-venv libopencv-dev \
         git wget curl vim zip unzip \
         libgl1 && \
     apt clean && \
