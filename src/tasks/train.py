@@ -176,18 +176,17 @@ def run_training(input_json):
 
     training_folder = prepare_folder(username, images, token_name, class_name)
     print(f"Training folder: {training_folder}")
+
     images_folder = os.path.join(train_data_dir_base, username, "img")
     training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
-
-    full_command = f"""source /venv/bin/activate && {training_command} && deactivate"""
 
     print(f""" 
           Full training command:
           
-          {full_command}
+          {training_command}
           """)
     results = subprocess.run(
-        f"bash -c '{full_command}'", shell=True, check=True)
+        f"bash -c '{training_command}'", shell=True, check=True)
 
     print("Todo: clean up training folder")
     print("Training finished.")
