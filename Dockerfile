@@ -32,7 +32,7 @@ RUN echo "Setting up A1111" && \
     pip3 cache purge && \
     pip3 install xformers && \
     # Assuming 'install-automatic.py' is in your 'builder' directory
-    python3 /builder/install-automatic.py --skip-torch-cuda-test && \
+    python3 /install-automatic.py --skip-torch-cuda-test && \
     pip3 cache purge && \
     deactivate
 
