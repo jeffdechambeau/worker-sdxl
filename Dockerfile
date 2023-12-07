@@ -21,12 +21,17 @@ FROM base as setup
 
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-COPY builder /
+
 
 RUN echo "Setting up A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
-    cd /stable-diffusion-webui && \
-    python3 -m venv --system-site-packages venv && \
+    cd /stable-diffusion-webui
+
+COPY builder /
+    
+WORKDIR /stable-diffusion-webui
+
+RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 cache purge && \
@@ -37,7 +42,6 @@ RUN echo "Setting up A1111" && \
     deactivate
 
 RUN echo "Installing Adetailer" && \
-    cd /stable-diffusion-webui && \
     source venv/bin/activate && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \ 
     cd /stable-diffusion-webui/extensions/adetailer && \
@@ -47,7 +51,6 @@ RUN echo "Installing Adetailer" && \
     deactivate
 
 RUN echo "Installing ControlNet" && \
-    cd /stable-diffusion-webui && \
     source venv/bin/activate && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
@@ -63,6 +66,7 @@ RUN echo "Installing misc extras" && \
 # ADD https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors /stable-diffusion-webui/models/VAE/sdxl_vae.safetensors
 ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
+WORKDIR / 
 RUN echo "Installing Kohya_ss" && \
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
     cd /kohya_ss && \
