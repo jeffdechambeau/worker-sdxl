@@ -6,10 +6,7 @@ from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 
 train_data_dir_base = '/workspace/witit-custom/active_training'
-train_data_dir_base = '/Users/jds/code/upwork/Nathaniel/worker-sdxl/blah'
-
 logging_dir = "/workspace/logs/"
-logging_dir = "/Users/jds/code/upwork/Nathaniel/worker-sdxl/blah"
 
 
 def prepare_folder(username, images, token_name, class_name, train_data_dir_base=train_data_dir_base, repeats=40):
