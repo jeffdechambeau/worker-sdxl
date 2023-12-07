@@ -10,7 +10,7 @@ pretrained_model_path = "/stable-diffusion-webui/models/Stable-diffusion/rundiff
 train_data_dir_base = '/workspace/witit-custom/active_training'
 # train_data_dir_base = '/Users/jds/code/upwork/Nathaniel/worker-sdxl/tmpenv'
 logging_dir = "/workspace/logs/"
-script_path = '/workspace/kohya_ss/sdxl_train.py'
+script_path = '/kohya_ss/sdxl_train.py'
 
 
 def prepare_folder(username, images, token_name, class_name, repeats=40):
