@@ -46,7 +46,11 @@ RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
 # Prepare runtime environment
 WORKDIR /
 COPY src/ /
-RUN chmod +x start.sh
+RUN chmod +x setup.sh && \
+    chmod +x start.sh
 RUN ln -s /runpod-volume /workspace
+
+RUN ./setup.sh
+
 
 CMD ["/start.sh"]
