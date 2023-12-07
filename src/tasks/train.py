@@ -186,7 +186,7 @@ def run_training(input_json):
           {training_command}
           """)
     results = subprocess.run(
-        f"bash -c '{training_command}'", shell=True, check=True)
+        f"bash -c '{training_command}' > /workspace/kohya_ss.log 2>&1", shell=True, check=True)
 
     print("Todo: clean up training folder")
     print("Training finished.")
