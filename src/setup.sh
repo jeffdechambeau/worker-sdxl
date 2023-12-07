@@ -7,7 +7,18 @@ source /stable-diffusion-webui/env/bin/activate
 download_if_not_exists() {
     local file_path="$1"
     local file_url="$2"
+    local file_dir
 
+    # Extract the directory path from the file_path
+    file_dir=$(dirname "$file_path")
+
+    # Ensure the directory exists
+    if [ ! -d "$file_dir" ]; then
+        echo "Directory $file_dir does not exist. Creating..."
+        mkdir -p "$file_dir"
+    fi
+
+    # Download the file if it does not exist
     if [ ! -f "$file_path" ]; then
         echo "$file_path not found. Downloading..."
         wget -O "$file_path" "$file_url"
@@ -27,6 +38,7 @@ upscaler_path="/stable-diffusion-webui/models/ESRGAN/4xBox.pth"
 upscaler_url="https://drive.google.com/u/0/uc?id=1KToK9mOz05wgxeMaWj9XFLOE4cnvo40D&export=download"
 
 # Call the function with the path and URL for each file
+# Uncomment the lines below as needed
 download_if_not_exists "$rundiffusionXL_path" "$rundiffusionXL_url"
 download_if_not_exists "$sdxl_vae_path" "$sdxl_vae_url"
 download_if_not_exists "$upscaler_path" "$upscaler_url"
