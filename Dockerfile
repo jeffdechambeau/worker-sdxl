@@ -8,6 +8,25 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /
 
+
+FROM base as setup
+
+RUN ln -s /usr/bin/python3.10 /usr/bin/python
+
+RUN echo "Setting up A1111" && \
+    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui
+    
+WORKDIR /stable-diffusion-webui
+COPY builder .
+
+RUN python3 -m venv --system-site-packages venv && \
+    source venv/bin/activate && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install xformers && \
+    python3 install-automatic.py --skip-torch-cuda-test && \
+    pip3 cache purge && \
+    deactivate
+
 RUN apt update && \
     apt install -y --no-install-recommends \
         build-essential software-properties-common python3-pip python3.10-venv \
@@ -17,29 +36,6 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
-FROM base as setup
-
-RUN ln -s /usr/bin/python3.10 /usr/bin/python
-
-
-
-RUN echo "Setting up A1111" && \
-    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
-    cd /stable-diffusion-webui
-
-COPY builder /stable-fiffusion-webui/
-    
-WORKDIR /stable-diffusion-webui
-
-RUN python3 -m venv --system-site-packages venv && \
-    source venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 cache purge && \
-    pip3 install xformers && \
-    # Assuming 'install-automatic.py' is in your 'builder' directory
-    python3 install-automatic.py --skip-torch-cuda-test && \
-    pip3 cache purge && \
-    deactivate
 
 RUN echo "Installing Adetailer" && \
     source venv/bin/activate && \
