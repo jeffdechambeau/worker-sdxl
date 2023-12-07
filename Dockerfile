@@ -27,7 +27,7 @@ RUN echo "Setting up A1111" && \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
     cd /stable-diffusion-webui
 
-COPY builder /
+COPY builder /stable-fiffusion-webui/
     
 WORKDIR /stable-diffusion-webui
 
@@ -37,7 +37,7 @@ RUN python3 -m venv --system-site-packages venv && \
     pip3 cache purge && \
     pip3 install xformers && \
     # Assuming 'install-automatic.py' is in your 'builder' directory
-    python3 /install-automatic.py --skip-torch-cuda-test && \
+    python3 install-automatic.py --skip-torch-cuda-test && \
     pip3 cache purge && \
     deactivate
 
