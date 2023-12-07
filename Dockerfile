@@ -15,30 +15,39 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Setting up Python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-# Clone and setup all repositories and dependencies
+# Clone and setup A1111 and Kohya_ss repositories and dependencies
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /stable-diffusion-webui && \
-    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss && \
-    cd /stable-diffusion-webui && \
-    python3 -m venv --system-site-packages venv && \
+    git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss
+
+# Setup Stable Diffusion WebUI (A1111)
+WORKDIR /stable-diffusion-webui
+COPY builder .
+RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 install xformers && \
+    pip3 install --no-cache-dir -r requirements.txt xformers && \
+    python3 install-automatic.py --skip-torch-cuda-test && \
     pip3 cache purge && \
-    deactivate && \
-    cd /kohya_ss && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 install runpod opencv-python bitsandbytes scipy && \
+    deactivate
+
+# Install Adetailer and ControlNet extensions
+RUN source venv/bin/activate && \
+    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
+    git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
+    cd extensions/adetailer && pip3 install . segment_anything lama_cleaner && \
+    cd ../sd-webui-controlnet && pip3 install -r requirements.txt && \
+    pip3 cache purge && \
+    deactivate
+
+# Setup Kohya_ss
+WORKDIR /kohya_ss
+RUN pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy && \
     pip3 install . && \
     pip3 cache purge
 
 # Download models and styles at runtime or use a separate script to reduce image size
 # ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
 
-COPY src /src
-COPY builder /builder
-COPY start.sh /start.sh
-
-RUN chmod +x /start.sh
-
 WORKDIR /
+COPY src .  
+RUN chmod +x /start.sh
 CMD ["/start.sh"]
