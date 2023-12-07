@@ -23,10 +23,10 @@ rundiffusionXL_url="https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiff
 sdxl_vae_path="/stable-diffusion-webui/models/VAE/sdxl_vae.safetensors"
 sdxl_vae_url="https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors"
 
-4xBox_path="/stable-diffusion-webui/models/ESRGAN/4xBox.pth"
-4xBox_url="https://drive.google.com/u/0/uc?id=1KToK9mOz05wgxeMaWj9XFLOE4cnvo40D&export=download"
+upscaler_path="/stable-diffusion-webui/models/ESRGAN/4xBox.pth"
+upscaler_url="https://drive.google.com/u/0/uc?id=1KToK9mOz05wgxeMaWj9XFLOE4cnvo40D&export=download"
 
 # Call the function with the path and URL for each file
 download_if_not_exists "$rundiffusionXL_path" "$rundiffusionXL_url"
 download_if_not_exists "$sdxl_vae_path" "$sdxl_vae_url"
-download_if_not_exists "$4xBox_path" "$4xBox_url"
+download_if_not_exists "$upscaler_path" "$upscaler_url"
