@@ -23,8 +23,9 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git . && \
     pip3 cache purge && \
     rm -rf /root/.cache/pip
 
+
 # Install extensions (Adetailer and ControlNet)
-COPY builder/ install-automatic.py
+COPY builder/install-automatic.py .
 RUN source venv/bin/activate && \
     python3 install-automatic.py --skip-torch-cuda-test && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
