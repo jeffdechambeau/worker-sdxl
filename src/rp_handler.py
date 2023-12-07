@@ -1,6 +1,5 @@
 from tasks.generate import generate, wait_for_service
 from tasks.train import run_training
-from pprint import pprint
 
 import requests
 import runpod
