@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 from requests.adapters import HTTPAdapter, Retry
@@ -9,18 +10,24 @@ retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
 automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 
 
-def generate(data):
-    api_name = data["api_name"]
-    response = automatic_session.post(
-        f'{LOCAL_URL}/{api_name}', json=data.get("input", {}), timeout=600)
-    result = response.json()
+is_training_pod_only = os.environ.get(
+    'IS_TRAINING_POD_ONLY', 'False').lower() == 'true'
+
+
+def generate(json):
     print("Generating...")
-    print("data:", data)
-    print("result:", result)
+    api_name = json["api_name"]
+    url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
+    response = automatic_session.post(url, json, timeout=600)
+    result = response.json()
+    print("Generated.")
     return result
 
 
 def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
+
+    if is_training_pod_only:
+        return
     while True:
         try:
             requests.get(url, timeout=120)
@@ -30,4 +37,4 @@ def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
         except Exception as err:
             print("Error: ", err)
 
-        time.sleep(2)
+        time.sleep(5)
