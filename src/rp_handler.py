@@ -42,9 +42,6 @@ def handle_post_request(data):
 
     print(f"{username} requested {api_name}")
 
-    del data['api_name']
-    del data['username']
-
     if api_name == 'dreambooth':
         result = run_training(data)
     elif api_name in ['txt2img', 'img2img']:
