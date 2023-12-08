@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source /stable-diffusion-webui/env/bin/activate
-
 download_if_not_exists() {
     local file_path="$1"
     local file_url="$2"
@@ -21,8 +19,6 @@ download_if_not_exists() {
         echo "$file_path already exists."
     fi
 }
-
-# 
 
 rundiffusionXL_path="/workspace/models/Stable-diffusion/rundiffusionXL.safetensors"
 rundiffusionXL_url="https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiffusionXL_beta.safetensors?rlkey=2674n1a85jns6opu3wacp9haq&dl=1"
