@@ -17,7 +17,9 @@ is_training_pod_only = os.environ.get(
 
 
 def hotswap_resolution(json):
-    if 'witit_size' and 'witit_ar' not in json:
+    if 'witit_size' not in json:
+        return json
+    if 'witit_ar' not in json:
         return json
 
     size = json['witit_size']
@@ -37,14 +39,11 @@ def hotswap_resolution(json):
 def generate(json):
     try:
         print("Generating...")
-        pprint(json)
         api_name = json["api_name"]
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
         response = automatic_session.post(url, json=json, timeout=600)
-        print(response)
         result = response.json()
-        print("Generated.", result)
-        return result
+        return hotswap_resolution(result)
     except Exception as err:
         print("Error: ", err)
         return {"error": str(err)}
