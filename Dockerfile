@@ -8,10 +8,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Important notes:
-#  The build steps specified below are such so 
-#  that this Dockerfile will build successfully 
-#  via github automations.
-#  If any one step gets too big, the build fails. 
+
+# These build steps are such so that
+# this Dockerfile will build successfully 
+# via github automations.
+
+# If any one step, or the combined total, 
+# gets too big, the entire build will fail. 
 
 # Install core dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -53,7 +56,7 @@ RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
 WORKDIR /
 COPY src/ /
 
-# We call setup.sh to in startup.sh to
+# We call setup.sh in startup.sh to
 # optionally load assets to the network mount.
 
 RUN ln -s /runpod-volume /workspace && \
