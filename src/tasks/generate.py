@@ -41,8 +41,9 @@ def generate(json):
         api_name = json["api_name"]
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
         response = automatic_session.post(url, json, timeout=600)
+        print(response)
         result = response.json()
-        print("Generated.")
+        print("Generated.", result)
         return result
     except Exception as err:
         print("Error: ", err)
