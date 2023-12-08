@@ -4,8 +4,6 @@ from tasks.train import run_training
 import requests
 import runpod
 
-from pprint import pprint
-
 LOCAL_URL = "http://127.0.0.1:3000"
 
 automatic_session = requests.Session()
@@ -24,24 +22,37 @@ def handle_get_request(endpoint):
         return {"error": str(e)}
 
 
-def handle_post_request(data):
-    api_name = data.get('api_name')
-    username = data.get('username')
-    pprint(data)
+def validate_data(data):
+    if not isinstance(data, dict):
+        return False, {"error": "Input data is not a valid dictionary."}
 
-    if not api_name:
-        return {"error": "No API name specified in the request data."}
-    if not username:
-        return {"error": "No username specified in the request data."}
+    if 'api_name' not in data or 'username' not in data:
+        return False, {"error": "Missing required fields in the data."}
+
+    return True, None
+
+
+def handle_post_request(data):
+    is_valid, error_response = validate_data(data)
+    if not is_valid:
+        return error_response
+
+    api_name = data['api_name']
+    username = data['username']
 
     print(f"{username} requested {api_name}")
 
     if api_name == 'dreambooth':
-        return run_training(data)
+        result = run_training(data)
     elif api_name in ['txt2img', 'img2img']:
-        return generate(data)
+        result = generate(data)
     else:
         return {"error": f"Unknown API name: {api_name}"}
+
+    if not isinstance(result, dict):
+        return {"error": "The API function did not return a valid dictionary."}
+
+    return result
 
 
 def handler(event):
