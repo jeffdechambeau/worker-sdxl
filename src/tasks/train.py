@@ -49,7 +49,7 @@ def run_training(input_json):
         os.makedirs(logging_dir, exist_ok=True)
         with open(f"{logging_dir}kohya_ss.log", "w") as log_file:
             subprocess.run(
-                ["bash", "-c", training_command],
+                [training_command],
                 stdout=log_file,
                 stderr=subprocess.STDOUT,
                 check=True
