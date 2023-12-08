@@ -7,6 +7,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# Important notes:
+#  The build steps specified below are such so 
+#  that this Dockerfile will build successfully 
+#  via github automations.
+#  If any one step gets too big, the build fails. 
+
 # Install core dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev python3-pip python3.10-venv libopencv-dev git wget curl vim zip unzip \
@@ -23,7 +29,6 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git . && \
     pip3 install --no-cache-dir -r requirements.txt xformers && \
     pip3 cache purge && \
     rm -rf /root/.cache/pip
-
 
 # Install extensions (Adetailer and ControlNet)
 COPY builder/install-automatic.py .
@@ -47,6 +52,9 @@ RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
 # Prepare runtime environment
 WORKDIR /
 COPY src/ /
+
+# We call setup.sh to in startup.sh to
+# optionally load assets to the network mount.
 
 RUN ln -s /runpod-volume /workspace && \
     chmod +x setup.sh && \
