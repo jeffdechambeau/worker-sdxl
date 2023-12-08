@@ -4,6 +4,8 @@ from tasks.train import run_training
 import requests
 import runpod
 
+from pprint import pprint
+
 LOCAL_URL = "http://127.0.0.1:3000"
 
 automatic_session = requests.Session()
@@ -25,6 +27,7 @@ def handle_get_request(endpoint):
 def handle_post_request(data):
     api_name = data.get('api_name')
     username = data.get('username')
+    pprint(data)
 
     if not api_name:
         return {"error": "No API name specified in the request data."}

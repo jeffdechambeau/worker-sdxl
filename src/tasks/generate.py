@@ -3,6 +3,7 @@ import time
 import requests
 from requests.adapters import HTTPAdapter, Retry
 from utils.size import size_config
+from pprint import pprint
 
 LOCAL_URL = "http://127.0.0.1:3000"
 
@@ -34,14 +35,18 @@ def hotswap_resolution(json):
 
 
 def generate(json):
-    print("Generating...")
-    api_name = json["api_name"]
-    url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
-
-    response = automatic_session.post(url, json, timeout=600)
-    result = response.json()
-    print("Generated.")
-    return result
+    try:
+        print("Generating...")
+        pprint(json)
+        api_name = json["api_name"]
+        url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
+        response = automatic_session.post(url, json, timeout=600)
+        result = response.json()
+        print("Generated.")
+        return result
+    except Exception as err:
+        print("Error: ", err)
+        return {"error": str(err)}
 
 
 def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
