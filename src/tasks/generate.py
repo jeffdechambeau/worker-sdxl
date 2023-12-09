@@ -3,6 +3,7 @@ import time
 import requests
 from requests.adapters import HTTPAdapter, Retry
 from utils.size import size_config
+from utils.webhooks import send_webhook_notification
 from pprint import pprint
 
 LOCAL_URL = "http://127.0.0.1:3000"
@@ -38,13 +39,17 @@ def hotswap_resolution(json):
 
 
 def generate(json):
+
     try:
         print("Generating...")
         api_name = json["api_name"]
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
+        json = hotswap_resolution(json)
         response = automatic_session.post(url, json=json, timeout=600)
         result = response.json()
-        return hotswap_resolution(result)
+        if 'webhook' in json:
+            send_webhook_notification(json['webhook'], result)
+        return result
     except Exception as err:
         print("Error: ", err)
         return {"error": str(err)}

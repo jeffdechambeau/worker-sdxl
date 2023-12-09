@@ -4,6 +4,7 @@ import os
 from utils.shell import make_train_command
 from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
+from utils.webhooks import send_webhook_notification
 
 train_data_dir_base = '/workspace/witit-custom/active_training'
 logging_dir = "/workspace/logs/"
@@ -52,10 +53,15 @@ def run_training(input_json):
             f"bash -c '{training_command}' > /workspace/logs/kohya_ss.log 2>&1 ", shell=True, check=True)
 
         print("Training finished.")
-        output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
-
         delete_training_folder(user_folder)
-        return {"status": "success", "custom_checkpoint_path": output_file}
+
+        output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
+        result = {"status": "success", "custom_checkpoint_path": output_file}
+
+        if 'webhook' in input_json:
+            send_webhook_notification(input_json['webhook'], result)
+
+        return result
 
     except subprocess.CalledProcessError as e:
         delete_training_folder(user_folder)
