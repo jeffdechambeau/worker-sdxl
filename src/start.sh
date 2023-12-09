@@ -13,4 +13,5 @@ python3.10 /stable-diffusion-webui/webui.py --api --nowebui --port 3000 > /works
 deactivate
 
 echo "Starting RunPod Handler"
+source /kohya_ss/env/bin/activate
 python3 -u /rp_handler.py
