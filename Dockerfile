@@ -47,6 +47,8 @@ RUN source venv/bin/activate && \
 # Clone and set up Kohya_ss
 WORKDIR /kohya_ss
 RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
+    python3 -m venv --system-site-packages venv && \
+    source venv/bin/activate && \
     pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy accelerate && \
     pip3 install . && \
     pip3 cache purge && \
@@ -56,6 +58,7 @@ RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
 WORKDIR /
 COPY src/ /
 
+COPY builder/accelerate.yaml /root/.cache/huggingface/accelerate/default_config.yaml
 # We call setup.sh in startup.sh to
 # optionally load assets to the network mount.
 
