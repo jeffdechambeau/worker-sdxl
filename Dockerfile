@@ -47,7 +47,7 @@ RUN source venv/bin/activate && \
 # Clone and set up Kohya_ss
 WORKDIR /kohya_ss
 RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
-    pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy && \
+    pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy accelerate && \
     pip3 install . && \
     pip3 cache purge && \
     rm -rf /root/.cache/pip
