@@ -34,13 +34,12 @@ def run_training(input_json):
     token_name = input_json['token']
     class_name = input_json['class']
     model_path = input_json['model_path']
-    images_folder = os.path.join(train_data_dir_base, username, "img")
 
+    images_folder = os.path.join(train_data_dir_base, username, "img")
+    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
+    output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
-
-    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
-    # full_command = f"""source /venv/bin/activate && {training_command} && deactivate"""
 
     print(f"User folder: {user_folder}")
     print(f"Images folder: {images_folder}")
@@ -52,11 +51,15 @@ def run_training(input_json):
         subprocess.run(
             f"bash -c '{training_command}' > /workspace/logs/kohya_ss.log 2>&1 ", shell=True, check=True)
 
-        print("Training finished.")
+        print(f"Training finished: {output_file}")
         delete_training_folder(user_folder)
 
-        output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
-        result = {"status": "success", "custom_checkpoint_path": output_file}
+        result = {"status": "success",
+                  "custom_checkpoint_path": output_file,
+                  "username": username,
+                  "token": token_name,
+                  "class": class_name,
+                  "cleanup_complete": True}
 
         if 'webhook' in input_json:
             send_webhook_notification(input_json['webhook'], result)
@@ -65,5 +68,11 @@ def run_training(input_json):
 
     except subprocess.CalledProcessError as e:
         delete_training_folder(user_folder)
+        result = {"status": "error",
+                  "error": str(e),
+                  "cleanup_complete": True}
+
+        if 'webhook' in input_json:
+            send_webhook_notification(input_json['webhook'], result)
+
         print(f"Error running training: {e}")
-        return {"status": "error", "error": str(e)}
