@@ -24,6 +24,7 @@ def hotswap_resolution(json):
 
     size = json['witit_size']
     ar = json['witit_ar']
+    print(f"Setting resolution to {size} {ar}")
 
     if size not in size_config:
         raise Exception(f"Invalid size: {size}")

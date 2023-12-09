@@ -14,6 +14,7 @@ def handle_get_request(endpoint):
         return {"error": "No endpoint specified for GET request."}
 
     uri = f'{LOCAL_URL}/{endpoint}'
+    print("GET request to: ", uri)
     try:
         response = automatic_session.get(uri, timeout=600)
         response.raise_for_status()
