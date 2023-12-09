@@ -33,12 +33,12 @@ def run_training(input_json):
     token_name = input_json['token']
     class_name = input_json['class']
     model_path = input_json['model_path']
+    images_folder = os.path.join(train_data_dir_base, username, "img")
 
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
 
-    training_command = make_train_command(
-        username, resolution, images_folder, model_path)
+    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
 
     print(f"User folder: {user_folder}")
     print(f"Images folder: {images_folder}")
@@ -47,13 +47,8 @@ def run_training(input_json):
 
     try:
         os.makedirs(logging_dir, exist_ok=True)
-        with open(f"{logging_dir}kohya_ss.log", "w") as log_file:
-            subprocess.run(
-                [f"accelerate launch {training_command}"],
-                stdout=log_file,
-                stderr=subprocess.STDOUT,
-                check=True
-            )
+        subprocess.run(
+            f"bash -c '{training_command}' > /workspace/logs/kohya_ss.log 2>&1 ", shell=True, check=True)
 
         print("Training finished.")
         output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
