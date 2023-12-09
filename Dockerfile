@@ -42,7 +42,8 @@ RUN source venv/bin/activate && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip3 install -r extensions/sd-webui-controlnet/requirements.txt && \
     pip3 cache purge && \
-    rm -rf /root/.cache/pip /root/.cache/huggingface_hub
+    rm -rf /root/.cache/pip /root/.cache/huggingface_hub && \
+    deactivate
 
 # Clone and set up Kohya_ss
 WORKDIR /kohya_ss
@@ -52,12 +53,17 @@ RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
     pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy accelerate && \
     pip3 install . && \
     pip3 cache purge && \
-    rm -rf /root/.cache/pip
+    rm -rf /root/.cache/pip && \
+    deactivate
 
 # Prepare runtime environment
+
+RUN pip3 install requests runpod accelerate && \
+    pip3 cache purge && \
+    rm -rf /root/.cache/pip
+
 WORKDIR /
 COPY src/ /
-
 COPY builder/accelerate.yaml /root/.cache/huggingface/accelerate/default_config.yaml
 # We call setup.sh in startup.sh to
 # optionally load assets to the network mount.
