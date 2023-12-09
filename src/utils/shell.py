@@ -61,7 +61,7 @@ def make_train_command(username="undefined", resolution="512,512", train_data_di
 
     config = {
         "script": script_path,
-        "num_cpu_threads_per_process": 4,
+        # "num_cpu_threads_per_process": 4,
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": train_data_dir,
         "resolution": resolution,
