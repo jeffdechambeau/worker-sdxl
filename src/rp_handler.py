@@ -1,15 +1,36 @@
-from tasks.generate import generate, wait_for_service
-from tasks.train import run_training
-
+import os
 import requests
 import runpod
+import time
+
+from tasks.generate import generate, wait_for_service
+from tasks.train import run_training
 
 LOCAL_URL = "http://127.0.0.1:3000"
 
 automatic_session = requests.Session()
+is_training_pod_only = os.environ.get(
+    'IS_TRAINING_POD_ONLY', 'False').lower() == 'true'
+
+
+def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
+
+    if is_training_pod_only:
+        return
+    while True:
+        try:
+            requests.get(url, timeout=120)
+            return
+        except requests.exceptions.RequestException:
+            print("Service not ready yet. Retrying...")
+        except Exception as err:
+            print("Error: ", err)
+
+        time.sleep(5)
 
 
 def handle_get_request(endpoint):
+    print("Handling GET request...")
     if not endpoint:
         return {"error": "No endpoint specified for GET request."}
 
@@ -57,6 +78,7 @@ def handle_post_request(data):
 
 
 def handler(event):
+    print("Event: ", event)
     method = event.get("method", "").upper()
 
     if method == "GET":

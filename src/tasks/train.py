@@ -48,31 +48,32 @@ def run_training(input_json):
 
     try:
         os.makedirs(logging_dir, exist_ok=True)
+        # Using 'tee' to duplicate the output to both log file and container shell
         subprocess.run(
-            f"bash -c '{training_command}' > /workspace/logs/kohya_ss.log 2>&1 ", shell=True, check=True)
+            f"bash -c '{training_command} | tee /workspace/logs/kohya_ss.log 2>&1'", shell=True, check=True)
 
         print(f"Training finished: {output_file}")
         delete_training_folder(user_folder)
 
-        result = {"status": "success",
-                  "custom_checkpoint_path": output_file,
-                  "username": username,
-                  "token": token_name,
-                  "class": class_name,
-                  "cleanup_complete": True}
-
-        if 'webhook' in input_json:
-            send_webhook_notification(input_json['webhook'], result)
-
-        return result
+        result = {
+            "status": "success",
+            "custom_checkpoint_path": output_file,
+            "username": username,
+            "token": token_name,
+            "class": class_name,
+            "cleanup_complete": True
+        }
 
     except subprocess.CalledProcessError as e:
         delete_training_folder(user_folder)
-        result = {"status": "error",
-                  "error": str(e),
-                  "cleanup_complete": True}
-
-        if 'webhook' in input_json:
-            send_webhook_notification(input_json['webhook'], result)
-
+        result = {
+            "status": "error",
+            "error": str(e),
+            "cleanup_complete": True
+        }
         print(f"Error running training: {e}")
+
+    if 'webhook' in input_json:
+        send_webhook_notification(input_json['webhook'], result)
+
+    return result
