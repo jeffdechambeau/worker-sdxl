@@ -24,8 +24,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Setting up Python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-
-
 # Clone and set up A1111
 WORKDIR /stable-diffusion-webui
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git . && \
@@ -47,12 +45,12 @@ RUN source venv/bin/activate && \
     rm -rf /root/.cache/pip /root/.cache/huggingface_hub && \
     deactivate
 
-# Clone and set up Kohya_ss
-
+# Install system level deps
 RUN pip3 install requests runpod opencv-python bitsandbytes scipy accelerate && \
     pip3 cache purge && \
     rm -rf /root/.cache/pip
 
+# Clone and set up Kohya_ss
 WORKDIR /kohya_ss
 RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
     pip3 install --no-cache-dir -r requirements.txt && \
