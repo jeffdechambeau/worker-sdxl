@@ -10,16 +10,16 @@ def inspect_path(path):
     if os.path.isfile(path):
         size = os.path.getsize(path)
         print(f"File Size: {size} bytes")
-        return size
+        return {"size": size}
     elif os.path.isdir(path):
         contents = os.listdir(path)
         print("Directory contents:")
         for item in contents:
             print(item)
-        return contents
+        return {"contents": contents}
     else:
         print("It is neither a file nor a directory.")
-        return None
+        return {"nothing": True}
 
 
 def delete_training_folder(folder_path):
