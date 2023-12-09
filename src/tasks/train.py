@@ -44,7 +44,7 @@ def run_training(input_json):
     print(f"User folder: {user_folder}")
     print(f"Images folder: {images_folder}")
     print(f"Training folder: {training_folder}")
-    print(f"Full training command: {full_command}")
+    print(f"Full training command: {training_command}")
 
     try:
         os.makedirs(logging_dir, exist_ok=True)
