@@ -3,7 +3,7 @@ import requests
 import runpod
 import time
 
-from tasks.generate import generate, wait_for_service
+from tasks.generate import generate
 from tasks.train import run_training
 
 LOCAL_URL = "http://127.0.0.1:3000"
