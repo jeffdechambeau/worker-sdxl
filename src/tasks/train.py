@@ -39,7 +39,7 @@ def run_training(input_json):
         username, images, token_name, class_name)
 
     training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
-    full_command = f"""source /venv/bin/activate && {training_command} && deactivate"""
+    # full_command = f"""source /venv/bin/activate && {training_command} && deactivate"""
 
     print(f"User folder: {user_folder}")
     print(f"Images folder: {images_folder}")
@@ -49,7 +49,7 @@ def run_training(input_json):
     try:
         os.makedirs(logging_dir, exist_ok=True)
         subprocess.run(
-            f"bash -c '{full_command}' > /workspace/logs/kohya_ss.log 2>&1 ", shell=True, check=True)
+            f"bash -c '{training_command}' > /workspace/logs/kohya_ss.log 2>&1 ", shell=True, check=True)
 
         print("Training finished.")
         output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
