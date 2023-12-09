@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Setting up Python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
+
+
 # Clone and set up A1111
 WORKDIR /stable-diffusion-webui
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git . && \
@@ -46,30 +48,27 @@ RUN source venv/bin/activate && \
     deactivate
 
 # Clone and set up Kohya_ss
-WORKDIR /kohya_ss
-RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
-    python3 -m venv --system-site-packages venv && \
-    source venv/bin/activate && \
-    pip3 install --no-cache-dir -r requirements.txt runpod opencv-python bitsandbytes scipy accelerate && \
-    pip3 install . && \
-    pip3 cache purge && \
-    rm -rf /root/.cache/pip && \
-    deactivate
 
-# Prepare runtime environment
-
-RUN pip3 install requests runpod accelerate && \
+RUN pip3 install requests runpod opencv-python bitsandbytes scipy accelerate && \
     pip3 cache purge && \
     rm -rf /root/.cache/pip
 
+WORKDIR /kohya_ss
+RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install . && \
+    pip3 cache purge && \
+    rm -rf /root/.cache/pip 
+
+# Misc extras 
 WORKDIR /
 COPY src/ /
 COPY builder/accelerate.yaml /root/.cache/huggingface/accelerate/default_config.yaml
-# We call setup.sh in startup.sh to
-# optionally load assets to the network mount.
 
 RUN ln -s /runpod-volume /workspace && \
     chmod +x setup.sh && \
-    chmod +x start.sh
-  
+    chmod +x start.sh 
+
 CMD ["/start.sh"]
+# We call setup.sh in startup.sh to
+# optionally load assets to the network mount.
