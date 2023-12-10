@@ -8,7 +8,7 @@ from utils.shell import make_command_from_json
 
 script_path = '/workspace/kohya_ss/sdxl_train.py'
 train_data_dir_base = '/workspace/witit-custom/active_training'
-pretrained_model_path = "/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
+pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
 checkpoint_output_path = "/workspace/witit-custom/checkpoints"
 logging_dir = "/workspace/logs/"
 
