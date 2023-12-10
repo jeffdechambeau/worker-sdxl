@@ -5,9 +5,73 @@ from utils.shell import make_train_command
 from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 from utils.webhooks import send_webhook_notification
+from utils.shell import make_command_from_json
 
+script_path = '/kohya_ss/sdxl_train.py'
 train_data_dir_base = '/workspace/witit-custom/active_training'
+pretrained_model_path = "/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
+checkpoint_output_path = "/workspace/witit-custom/checkpoints"
 logging_dir = "/workspace/logs/"
+
+
+def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training", model_path=pretrained_model_path):
+    output_dir = f'/workspace/witit-custom/checkpoints/{username}'
+    print(f"Output dir: {output_dir}")
+
+    config = {
+        "script": script_path,
+        # "num_cpu_threads_per_process": 4,
+        "pretrained_model_name_or_path": model_path,
+        "train_data_dir": train_data_dir,
+        "resolution": resolution,
+        "output_dir": output_dir,
+        "output_name": username,
+        "enable_bucket": True,
+        "min_bucket_reso": 256,
+        "max_bucket_reso": 1024,
+        "logging_dir": "/workspace/logs/",
+        "save_model_as": "safetensors",
+        "lr_scheduler_num_cycles": 1,
+        "max_token_length": 150,
+        "max_data_loader_n_workers": 0,
+        "learning_rate_te1": 0.0,
+        "learning_rate_te2": 0.0,
+        "learning_rate": 1e-06,
+        "lr_scheduler": "constant",
+        "lr_warmup_steps": 0,
+        "train_batch_size": 4,
+        "max_train_steps": 80,
+        "save_every_n_epochs": 1,
+        "mixed_precision": "bf16",
+        "save_precision": "fp16",
+        "cache_latents": True,
+        "cache_latents_to_disk": True,
+        "optimizer_type": "Adafactor",
+        "optimizer_args": {
+            "scale_parameter": "True",
+            "relative_step": "True",
+            "warmup_init": "True",
+            "weight_decay": "2"
+        },
+        "max_token_length": 150,
+        "keep_tokens": 1,
+        "caption_dropout_rate": 0.1,
+        "bucket_reso_steps": 64,
+        "shuffle_caption": True,
+        "caption_extension": ".txt",
+        "noise_offset": 0.0,
+        "max_grad_norm": 0.0
+    }
+
+    command = make_command_from_json(config)
+
+    print(f"""Created training command:
+          
+          {command}
+
+          """)
+
+    return f"accelerate launch {command}"
 
 
 def prepare_folder(username, images, token_name, class_name, train_data_dir_base=train_data_dir_base, repeats=40):
@@ -36,8 +100,9 @@ def run_training(input_json):
     model_path = input_json['model_path']
 
     images_folder = os.path.join(train_data_dir_base, username, "img")
-    training_command = f"accelerate launch {make_train_command(username, resolution, images_folder, model_path)}"
-    output_file = f'/workspace/witit-custom/checkpoints/{username}/{username}.safetensors'
+    training_command = make_train_command(
+        username, resolution, images_folder, model_path)
+    output_file = f'{checkpoint_output_path}/{username}/{username}.safetensors'
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
 
@@ -48,6 +113,7 @@ def run_training(input_json):
 
     try:
         os.makedirs(logging_dir, exist_ok=True)
+
         # Using 'tee' to duplicate the output to both log file and container shell
         subprocess.run(
             f"bash -c '{training_command} | tee /workspace/logs/kohya_ss.log 2>&1'", shell=True, check=True)
