@@ -32,12 +32,12 @@ RUN source /venv/stable-diffusion-webui/venv/bin/activate && \
     python3 install-automatic.py --skip-torch-cuda-test && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     cd extensions/adetailer && pip install . segment_anything lama_cleaner && \
+    cd /stable-diffusion-webui && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip install -r extensions/sd-webui-controlnet/requirements.txt && \
     git clone --depth=1 https://github.com/huchenlei/sd-webui-api-payload-display.git extensions/sd-webui-api-payload-display && \
     pip cache purge && \
-    rm -rf /root/.cache/pip /root/.cache/huggingface_hub && \
-    deactivate
+    rm -rf /root/.cache/pip /root/.cache/huggingface_hub 
 
 # Install system level deps (for kohya_ss and others)
 RUN pip3 install requests runpod opencv-python bitsandbytes scipy accelerate && \
