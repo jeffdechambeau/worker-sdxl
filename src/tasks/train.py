@@ -7,7 +7,7 @@ from utils.images import process_image
 from utils.webhooks import send_webhook_notification
 from utils.shell import make_command_from_json
 
-script_path = '/kohya_ss/sdxl_train.py'
+script_path = '/workspace/kohya_ss/sdxl_train.py'
 train_data_dir_base = '/workspace/witit-custom/active_training'
 pretrained_model_path = "/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
 checkpoint_output_path = "/workspace/witit-custom/checkpoints"
