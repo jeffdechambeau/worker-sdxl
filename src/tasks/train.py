@@ -1,7 +1,6 @@
 import subprocess
 import os
 
-from utils.shell import make_train_command
 from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 from utils.webhooks import send_webhook_notification
