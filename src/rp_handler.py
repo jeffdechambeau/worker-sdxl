@@ -14,9 +14,9 @@ is_training_pod_only = os.environ.get(
 
 
 def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
-
     if is_training_pod_only:
         return
+
     while True:
         try:
             requests.get(url, timeout=120)
