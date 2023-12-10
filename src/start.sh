@@ -4,11 +4,11 @@ echo "Starting Worker"
 echo "Optionally grabbing models"
 ./setup.sh
 
-cd /stable-diffusion-webui
-source venv/bin/activate
+mkdir -p /workspace/logs
 
 echo "Starting WebUI API"
-mkdir -p /workspace/logs
+cd /stable-diffusion-webui
+source /venv/stable-diffusion/webui/bin/activate
 python3.10 /workspace/stable-diffusion-webui/webui.py --api --nowebui --port 3000 > /workspace/logs/webui-api.log 2>&1 &
 deactivate
 
