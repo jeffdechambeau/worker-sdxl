@@ -1,9 +1,7 @@
 #!/bin/bash
-
 download_if_not_exists() {
     local file_path="$1"
     local file_url="$2"
-    local softlink_path="$3"
     local file_dir
 
     file_dir=$(dirname "$file_path")
@@ -16,22 +14,12 @@ download_if_not_exists() {
     if [ ! -f "$file_path" ]; then
         echo "$file_path not found. Downloading..."
         wget -O "$file_path" "$file_url"
-
-        # Check if the download was successful before creating the softlink
-        if [ -f "$file_path" ]; then
-            ln -sf "$file_path" "$softlink_path"
-            echo "Created softlink at $softlink_path"
-        fi
     else
         echo "$file_path already exists."
-
-        # Ensure the softlink exists even if the file wasn't just downloaded
-        ln -sf "$file_path" "$softlink_path"
-        echo "Created/Updated softlink at $softlink_path"
     fi
 }
 
-# start.sh
+
 
 # Check for /workspace/stable-diffusion-webui and copy if not present
 if [ ! -d "/workspace/stable-diffusion-webui" ]; then
