@@ -2,6 +2,7 @@ import os
 import requests
 import runpod
 import time
+from pprint import pprint
 
 from tasks.generate import generate_handler
 from tasks.train import training_handler
@@ -54,6 +55,20 @@ def validate_data(data):
     return True, None
 
 
+def handle_get_proxy(data):
+    endpoint = data.get('get')
+    params = data.get('params', {})
+    print(endpoint, params)
+
+    uri = f'{LOCAL_URL}/{endpoint}'
+    try:
+        response = automatic_session.get(uri, params=params, timeout=600)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return {"error": str(e)}
+
+
 def handle_post_request(data):
     is_valid, error_response = validate_data(data)
     if not is_valid:
@@ -61,9 +76,12 @@ def handle_post_request(data):
 
     api_name = data['api_name']
     username = data['username']
+    get = data.get('get')
 
-    print(f"{username} requested {api_name}")
+    pprint(f"{username} requested {api_name}")
 
+    if get:
+        result = handle_get_proxy(data)
     if api_name == 'dreambooth':
         result = training_handler(data)
     elif api_name in ['txt2img', 'img2img']:
@@ -78,19 +96,14 @@ def handle_post_request(data):
 
 
 def handler(event):
-    print("Event: ", event)
-    method = event.get("method", "").upper()
-
-    if method == "GET":
-        return handle_get_request(event.get("endpoint", ""))
-
+    pprint("Event")
     return handle_post_request(event.get('input', {}))
 
 
 if __name__ == "__main__":
     wait_for_service()
 
-    print("WebUI API Service is ready. Starting RunPod...")
+    pprint("WebUI API Service is ready. Starting RunPod...")
 
     runpod.serverless.start({"handler": handler,
                              "return_aggregate_stream": True})
