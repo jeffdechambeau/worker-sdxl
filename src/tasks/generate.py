@@ -35,23 +35,33 @@ def hotswap_resolution(json):
 
 
 def softlink_checkpoint(checkpoint_path):
+    softlink_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/user.safetensors"
 
-    subprocess.run(["ln", "-s", checkpoint_path,
-                   "/workspace/stable-diffusion-webui/models/Stable-diffusion/user.safetensors"])
+    # Check if the softlink already exists and remove it if it does
+    if os.path.islink(softlink_path):
+        os.unlink(softlink_path)
+        print("Existing softlink removed")
+
+    # Create a new softlink
+    subprocess.run(["ln", "-s", checkpoint_path, softlink_path])
     print("Softlinked user checkpoint")
 
 
 def refresh_checkpoints():
-    response = automatic_session.post(
-        f'{LOCAL_URL}/sdapi/v1/refresh_checkpoints')
-    response.raise_for_status()
+    try:
+        response = automatic_session.post(
+            f'{LOCAL_URL}/sdapi/v1/refresh-checkpoints')
+        response.raise_for_status()
 
-    checkpoints = automatic_session.get(
-        f'{LOCAL_URL}/sdapi/v1/sd-models').json()
-    print("Checkpoints: ", checkpoints)
-    # filter for name = user
-    match = [c for c in checkpoints if c['name'] == 'user'][0] or None
-    return match
+        checkpoints = automatic_session.get(
+            f'{LOCAL_URL}/sdapi/v1/sd-models').json()
+        print("Checkpoints: ", checkpoints)
+        # filter for name = user
+        match = [c for c in checkpoints if c['name'] == 'user'][0] or None
+        return match
+    except Exception as err:
+        print("Error: ", err)
+        return None
 
 
 def generate_handler(json_data):
