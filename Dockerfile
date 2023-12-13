@@ -31,7 +31,7 @@ COPY builder/install-automatic.py .
 RUN source /venv/stable-diffusion-webui/venv/bin/activate && \
     python3 install-automatic.py --skip-torch-cuda-test && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
-    cd extensions/adetailer && pip install . segment_anything lama_cleaner && \
+    cd extensions/adetailer && pip install . segment_anything lama_cleaner ultralytics && \
     cd /stable-diffusion-webui && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     pip install -r extensions/sd-webui-controlnet/requirements.txt && \
