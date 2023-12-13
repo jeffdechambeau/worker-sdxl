@@ -72,7 +72,7 @@ def generate_handler(json_data):
 
     if chkpt:
         print("Checkpoint: ", chkpt)
-        json_data['override_settings']['sd_model_checkpoint'] = chkpt['title']
+        json_data['override_settings']['sd_model_checkpoint'] = 'user.safetensors'
 
     try:
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
