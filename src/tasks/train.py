@@ -87,9 +87,6 @@ def prepare_folder(username, images, token_name, class_name, train_data_dir_base
 
 
 def run_training(input_json):
-    inspect = input_json.get('inspect_path')
-    if inspect:
-        return inspect_path(inspect)
 
     username = input_json['username']
     images = input_json['images']
@@ -142,3 +139,35 @@ def run_training(input_json):
         send_webhook_notification(input_json['webhook'], result)
 
     return result
+
+
+def delete_checkpoint(delete_path):
+    if "witit-custom/checkpoints" not in delete_path:
+        return {
+            "status": "error",
+            "error": "Invalid delete path"
+        }
+    try:
+        os.remove(delete_path)
+        return {
+            "status": "success",
+            "deleted_path": delete_path
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
+
+def training_handler(data):
+    inspect = data.get('inspect_path')
+    checkpoint_to_delete = data.get('checkpoint_to_delete')
+
+    if inspect:
+        return inspect_path(inspect)
+
+    if checkpoint_to_delete:
+        return delete_checkpoint(checkpoint_to_delete)
+
+    run_training(data)

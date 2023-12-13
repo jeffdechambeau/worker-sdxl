@@ -4,7 +4,7 @@ import runpod
 import time
 
 from tasks.generate import generate
-from tasks.train import run_training
+from tasks.train import training_handler
 
 LOCAL_URL = "http://127.0.0.1:3000"
 
@@ -65,7 +65,7 @@ def handle_post_request(data):
     print(f"{username} requested {api_name}")
 
     if api_name == 'dreambooth':
-        result = run_training(data)
+        result = training_handler(data)
     elif api_name in ['txt2img', 'img2img']:
         result = generate(data)
     else:
