@@ -14,7 +14,7 @@ logging_dir = "/workspace/logs/"
 
 
 def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training", model_path=pretrained_model_path):
-    output_dir = f'/workspace/witit-custom/checkpoints/{username}'
+    output_dir = f'/workspace/witit-custom/checkpoints/'
     print(f"Output dir: {output_dir}")
 
     config = {
