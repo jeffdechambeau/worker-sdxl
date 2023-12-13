@@ -42,7 +42,7 @@ def softlink_checkpoint(checkpoint_path):
 
 
 def refresh_checkpoints():
-    response = automatic_session.get(
+    response = automatic_session.post(
         f'{LOCAL_URL}/sdapi/v1/refresh_checkpoints')
     response.raise_for_status()
 
@@ -57,24 +57,23 @@ def refresh_checkpoints():
 def generate_handler(json_data):
     result = {}
 
+    print("Generating...")
+    api_name = json_data["api_name"]
+    checkpoint_path = json_data.get(
+        "override_settings").get("sd_model_checkpoint")
+
+    softlink_checkpoint(checkpoint_path)
+    chkpt = refresh_checkpoints()
+
+    if chkpt:
+        print("Checkpoint: ", chkpt)
+        json_data['override_settings']['sd_model_checkpoint'] = chkpt['title']
+
     try:
-        print("Generating...")
-        api_name = json_data["api_name"]
-        checkpoint_path = json_data.get(
-            "override_settings").get("sd_model_checkpoint")
-
-        softlink_checkpoint(checkpoint_path)
-        chkpt = refresh_checkpoints()
-
-        if chkpt:
-            print("Checkpoint: ", chkpt)
-            json_data['override_settings']['sd_model_checkpoint'] = chkpt['title']
-
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
         json_data = hotswap_resolution(json_data)
         response = automatic_session.post(url, json=json_data, timeout=600)
         result = response.json()
-
     except Exception as err:
         print("Error: ", err)
         result = {"error": str(err), "json": json_data}
