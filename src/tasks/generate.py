@@ -1,7 +1,10 @@
+import os
 import requests
+import subprocess
 from requests.adapters import HTTPAdapter, Retry
 from utils.size import size_config
 from utils.webhooks import send_webhook_notification
+
 
 LOCAL_URL = "http://127.0.0.1:3000"
 
@@ -31,12 +34,42 @@ def hotswap_resolution(json):
     return json
 
 
+def softlink_checkpoint(checkpoint_path):
+
+    subprocess.run(["ln", "-s", checkpoint_path,
+                   "/workspace/stable-diffusion-webui/models/Stable-diffusion/user.safetensors"])
+    print("Softlinked user checkpoint")
+
+
+def refresh_checkpoints():
+    response = automatic_session.get(
+        f'{LOCAL_URL}/sdapi/v1/refresh_checkpoints')
+    response.raise_for_status()
+
+    checkpoints = automatic_session.get(
+        f'{LOCAL_URL}/sdapi/v1/sd-models').json()
+    print("Checkpoints: ", checkpoints)
+    # filter for name = user
+    match = [c for c in checkpoints if c['name'] == 'user'][0] or None
+    return match
+
+
 def generate_handler(json_data):
     result = {}
 
     try:
         print("Generating...")
         api_name = json_data["api_name"]
+        checkpoint_path = json_data.get(
+            "override_settings").get("sd_model_checkpoint")
+
+        softlink_checkpoint(checkpoint_path)
+        chkpt = refresh_checkpoints()
+
+        if chkpt:
+            print("Checkpoint: ", chkpt)
+            json_data['override_settings']['sd_model_checkpoint'] = chkpt['title']
+
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
         json_data = hotswap_resolution(json_data)
         response = automatic_session.post(url, json=json_data, timeout=600)
@@ -45,6 +78,9 @@ def generate_handler(json_data):
     except Exception as err:
         print("Error: ", err)
         result = {"error": str(err), "json": json_data}
+
+    if chkpt:
+        os.remove(chkpt['path'])
 
     if 'webhook' in json_data:
         send_webhook_notification(json_data['webhook'], {
