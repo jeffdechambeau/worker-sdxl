@@ -31,7 +31,7 @@ def hotswap_resolution(json):
     return json
 
 
-def generate(json_data):
+def generate_handler(json_data):
     result = {}
 
     try:

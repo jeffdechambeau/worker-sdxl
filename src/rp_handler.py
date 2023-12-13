@@ -3,7 +3,7 @@ import requests
 import runpod
 import time
 
-from tasks.generate import generate
+from tasks.generate import generate_handler
 from tasks.train import training_handler
 
 LOCAL_URL = "http://127.0.0.1:3000"
@@ -67,7 +67,7 @@ def handle_post_request(data):
     if api_name == 'dreambooth':
         result = training_handler(data)
     elif api_name in ['txt2img', 'img2img']:
-        result = generate(data)
+        result = generate_handler(data)
     else:
         return {"error": f"Unknown API name: {api_name}"}
 
