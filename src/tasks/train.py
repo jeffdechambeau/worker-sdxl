@@ -170,4 +170,4 @@ def training_handler(data):
     if checkpoint_to_delete:
         return delete_checkpoint(checkpoint_to_delete)
 
-    run_training(data)
+    return run_training(data)

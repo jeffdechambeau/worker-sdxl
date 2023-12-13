@@ -33,8 +33,7 @@ def process_image(image_string, output_dir, image_index):
             image_path = os.path.join(output_dir, image_name)
             image.save(image_path)
             print(f"Saved image to {image_path}")
+            return image_path
         except Exception as e:
             print(f"Error processing image: {e}")
             return None
-
-    return image_path
