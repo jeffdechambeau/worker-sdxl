@@ -98,7 +98,7 @@ def run_training(input_json):
     images_folder = os.path.join(train_data_dir_base, username, "img")
     training_command = make_train_command(
         username, resolution, images_folder, model_path)
-    output_file = f'{checkpoint_output_path}/{username}/{username}.safetensors'
+    output_file = f'{checkpoint_output_path}/{username}.safetensors'
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
 
