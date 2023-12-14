@@ -24,4 +24,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: nathanielgerdes/worker-sdxl:latest
+          tags: nathanielgerdes/worker-sdxl:stable
