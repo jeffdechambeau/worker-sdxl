@@ -18,8 +18,8 @@ def make_train_command(username="undefined", resolution="512,512", train_data_di
     print(f"Output dir: {output_dir}")
 
     config = {
+        "num_cpu_threads_per_process": 4,
         "script": script_path,
-        # "num_cpu_threads_per_process": 4,
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": train_data_dir,
         "resolution": resolution,
@@ -39,7 +39,7 @@ def make_train_command(username="undefined", resolution="512,512", train_data_di
         "lr_scheduler": "constant",
         "lr_warmup_steps": 0,
         "train_batch_size": 4,
-        "max_train_steps": 80,
+        "max_train_steps": 100,
         "save_every_n_epochs": 1,
         "mixed_precision": "bf16",
         "save_precision": "fp16",
@@ -55,11 +55,12 @@ def make_train_command(username="undefined", resolution="512,512", train_data_di
         "max_token_length": 150,
         "keep_tokens": 1,
         "caption_dropout_rate": 0.1,
-        "bucket_reso_steps": 64,
+        "bucket_reso_steps": 32,
         "shuffle_caption": True,
         "caption_extension": ".txt",
         "noise_offset": 0.0,
-        "max_grad_norm": 0.0
+        "max_grad_norm": 0.0,
+        "network_train_unet_only": True
     }
 
     command = make_command_from_json(config)
@@ -126,7 +127,7 @@ def run_training(input_json):
             "cleanup_complete": True
         }
 
-    except subprocess.CalledProcessError as e:
+    except Exception as e:
         delete_training_folder(user_folder)
         result = {
             "status": "error",
