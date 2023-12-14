@@ -59,8 +59,7 @@ def make_train_command(username="undefined", resolution="512,512", train_data_di
         "shuffle_caption": True,
         "caption_extension": ".txt",
         "noise_offset": 0.0,
-        "max_grad_norm": 0.0,
-        "network_train_unet_only": True
+        "max_grad_norm": 0.0
     }
 
     command = make_command_from_json(config)

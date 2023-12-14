@@ -54,6 +54,7 @@ def refresh_checkpoints():
         checkpoints = automatic_session.get(
             f'{LOCAL_URL}/sdapi/v1/sd-models').json()
         print("Checkpoints: ", checkpoints)
+
     except Exception as err:
         print("Error: ", err)
         return None
