@@ -63,12 +63,6 @@ def make_train_command(username,  train_data_dir, resolution="512,512", model_pa
 
     command = make_command_from_json(config)
 
-    print(f"""Created training command:
-          
-          {command}
-
-          """)
-
     output_file = f'{CHECKPOINT_OUTPUT_PATH}/{username}.safetensors'
     final_command = f"accelerate launch {command}"
     return final_command, output_file
@@ -104,6 +98,7 @@ def run_training(input_json):
             token_name: {token_name}
             class_name: {class_name}
             model_path: {model_path}
+            output_file: {output_file} 
             user_folder: {user_folder}
             images_folder: {images_folder}
             training_folder: {training_folder}
@@ -114,6 +109,7 @@ def run_training(input_json):
         os.makedirs(LOGGING_DIR, exist_ok=True)
 
         training_command_list = shlex.split(training_command)
+
         with open(f'{LOGGING_DIR}/kohya_ss.log', 'w') as log_file:
             subprocess.run(training_command_list,
                            stdout=log_file, stderr=subprocess.STDOUT)
