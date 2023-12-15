@@ -81,7 +81,7 @@ def handle_checkpoint(json_data):
     except Exception as err:
         print("Error: ", err)
         os.remove(softlink_path)
-        return json_data, None
+        raise Exception(f"Checkpoint {model_name} not found")
 
 
 def generate_handler(json_data):
