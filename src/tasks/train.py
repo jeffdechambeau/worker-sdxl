@@ -11,24 +11,25 @@ from utils.io import make_success_payload, make_error_payload, unpack_json, dele
 SCRIPT_PATH = '/workspace/kohya_ss/sdxl_train.py'
 TRAIN_DATA_DIR_BASE = '/workspace/witit-custom/active_training'
 PRETRAINED_MODEL_PATH = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
-CHECKPOINT_OUTPUT_PATH = "/workspace/witit-custom/checkpoints"
 LOGGING_DIR = "/workspace/logs/"
+CONFIG_PATH = "/workspace/config/kohya_ss.json"
 
 
-def make_train_command(username,  train_data_dir, resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
+def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
 
-    config = load_config("/workspace/config/kohya_ss.json")
-    config['script'] = SCRIPT_PATH
-    config['output_name'] = username
-    config['output_dir'] = CHECKPOINT_OUTPUT_PATH
-    config['logging_dir'] = LOGGING_DIR
-    config['pretrained_model_name_or_path'] = model_path
-    config['train_data_dir'] = train_data_dir
-    config['resolution'] = resolution
+    config = {
+        "num_cpu_threads_per_process": 4,
+        "script": SCRIPT_PATH,
+        "pretrained_model_name_or_path": model_path,
+        "train_data_dir": TRAIN_DATA_DIR_BASE,
+        "resolution": resolution,
+        "output_name": username,
+        **load_config(CONFIG_PATH)
+    }
 
     command = make_command_from_json(config)
 
-    output_file = f'{CHECKPOINT_OUTPUT_PATH}/{username}.safetensors'
+    output_file = f'{config["output_dir"]}/{username}.safetensors'
     final_command = f"accelerate launch {command}"
     return final_command, output_file
 
