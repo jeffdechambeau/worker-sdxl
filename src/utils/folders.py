@@ -2,6 +2,9 @@ import shutil
 import os
 
 
+import os
+
+
 def inspect_path(path):
     if not os.path.exists(path):
         print("The path does not exist.")
@@ -10,7 +13,14 @@ def inspect_path(path):
     if os.path.isfile(path):
         size = os.path.getsize(path)
         print(f"File Size: {size} bytes")
-        return {"size": size}
+
+        if path.endswith('.log'):
+            with open(path, 'r') as file:
+                contents = file.read()
+                return {"size": size, "contents": contents}
+        else:
+            return {"size": size}
+
     elif os.path.isdir(path):
         contents = os.listdir(path)
         print("Directory contents:")
