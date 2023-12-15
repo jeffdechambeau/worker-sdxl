@@ -6,7 +6,7 @@ from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 from utils.webhooks import send_webhook_notification
 from utils.shell import make_command_from_json
-from utils.io import make_success_payload, make_error_payload, unpack_json
+from utils.io import make_success_payload, make_error_payload, unpack_json, delete_checkpoint
 
 SCRIPT_PATH = '/workspace/kohya_ss/sdxl_train.py'
 TRAIN_DATA_DIR_BASE = '/workspace/witit-custom/active_training'
@@ -20,15 +20,15 @@ def make_train_command(username,  train_data_dir, resolution="512,512", model_pa
     config = {
         "num_cpu_threads_per_process": 4,
         "script": SCRIPT_PATH,
+        "resolution": resolution,
+        "output_name": username,
+        "output_dir": CHECKPOINT_OUTPUT_PATH,
+        "logging_dir": LOGGING_DIR,
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": train_data_dir,
-        "resolution": resolution,
-        "output_dir": CHECKPOINT_OUTPUT_PATH,
-        "output_name": username,
         "enable_bucket": True,
         "min_bucket_reso": 256,
         "max_bucket_reso": 1024,
-        "logging_dir": LOGGING_DIR,
         "save_model_as": "safetensors",
         "lr_scheduler_num_cycles": 1,
         "max_data_loader_n_workers": 0,
@@ -99,15 +99,16 @@ def run_training(input_json):
         username, images_folder, resolution, model_path)
 
     print(f"""
-    username: {username}
-    resolution: {resolution}
-    token_name: {token_name}
-    class_name: {class_name}
-    model_path: {model_path}
-    user_folder: {user_folder}
-    images_folder: {images_folder}
-    training_folder: {training_folder}
-    training_command: {training_command}""")
+            username: {username}
+            resolution: {resolution}
+            token_name: {token_name}
+            class_name: {class_name}
+            model_path: {model_path}
+            user_folder: {user_folder}
+            images_folder: {images_folder}
+            training_folder: {training_folder}
+            training_command: {training_command}
+    """)
 
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
@@ -117,10 +118,9 @@ def run_training(input_json):
             subprocess.run(training_command_list,
                            stdout=log_file, stderr=subprocess.STDOUT)
 
-        print(f"Training finished: {output_file}")
         delete_training_folder(user_folder)
-
         result = make_success_payload()
+        print(f"Training finished: {output_file}")
 
     except Exception as e:
         delete_training_folder(user_folder)
@@ -132,32 +132,12 @@ def run_training(input_json):
     return result
 
 
-def delete_checkpoint(delete_path):
-    if "witit-custom/checkpoints" not in delete_path:
-        return {
-            "status": "error",
-            "error": "Invalid delete path"
-        }
-    try:
-        os.remove(delete_path)
-        return {
-            "status": "success",
-            "deleted_path": delete_path
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e)
-        }
-
-
 def training_handler(data):
     inspect = data.get('inspect_path')
-    checkpoint_to_delete = data.get('checkpoint_to_delete')
-
     if inspect:
         return inspect_path(inspect)
 
+    checkpoint_to_delete = data.get('checkpoint_to_delete')
     if checkpoint_to_delete:
         return delete_checkpoint(checkpoint_to_delete)
 

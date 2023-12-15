@@ -1,4 +1,7 @@
 
+import os
+
+
 def make_success_payload(username, token_name, class_name, output_file):
     return {
         "status": "success",
@@ -28,3 +31,22 @@ def unpack_json(json):
     model_path = json['model_path']
 
     return username, images, resolution, token_name, class_name, model_path
+
+
+def delete_checkpoint(delete_path):
+    if "witit-custom/checkpoints" not in delete_path:
+        return {
+            "status": "error",
+            "error": "Invalid delete path"
+        }
+    try:
+        os.remove(delete_path)
+        return {
+            "status": "success",
+            "deleted_path": delete_path
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e)
+        }
