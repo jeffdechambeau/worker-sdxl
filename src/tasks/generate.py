@@ -73,7 +73,7 @@ def handle_checkpoint(json_data):
     softlink_path = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
     print(checkpoints)
-    [match] = [c for c in checkpoints if c['path'] == softlink_path] or [None]
+    [match] = [c for c in checkpoints if c['filename'] == softlink_path] or [None]
 
     if not match:
         raise Exception("Checkpoint not found")
