@@ -73,15 +73,15 @@ def handle_checkpoint(json_data):
 
     softlink_path, model_name = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
-    pprint(checkpoints)
-    [match] = [c for c in checkpoints if c['model_name'] == model_name] or [None]
 
-    if not match:
-        raise Exception("Checkpoint not found")
-
-    print("Checkpoint: ", match)
-    json_data['override_settings']['sd_model_checkpoint'] = softlink_path
-    return json_data, softlink_path
+    try:
+        [match] = [c for c in checkpoints if c['model_name'] == model_name]
+        json_data['override_settings']['sd_model_checkpoint'] = softlink_path
+        return json_data, softlink_path
+    except Exception as err:
+        print("Error: ", err)
+        os.remove(softlink_path)
+        return json_data, None
 
 
 def generate_handler(json_data):
