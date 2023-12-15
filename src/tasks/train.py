@@ -68,11 +68,12 @@ def make_train_command(username,  train_data_dir, resolution="512,512", model_pa
     return final_command, output_file
 
 
-def prepare_folder(username, images, token_name, class_name, train_data_dir_base=TRAIN_DATA_DIR_BASE, repeats=40):
-    user_folder = os.path.join(train_data_dir_base, username)
+def prepare_folder(username, images, token_name, class_name, repeats=40):
+    user_folder = os.path.join(TRAIN_DATA_DIR_BASE, username)
     images_folder = os.path.join(user_folder, "img")
     training_folder = os.path.join(
         images_folder, f"{repeats}_{token_name}_{class_name}")
+
     os.makedirs(training_folder, exist_ok=True)
 
     for i, image_string in enumerate(images):
@@ -82,7 +83,6 @@ def prepare_folder(username, images, token_name, class_name, train_data_dir_base
 
 
 def run_training(input_json):
-
     username, images, resolution, token_name, class_name, model_path = unpack_json(
         input_json)
 
