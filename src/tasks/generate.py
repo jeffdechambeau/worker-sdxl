@@ -69,7 +69,7 @@ def handle_checkpoint(json_data):
     checkpoint_path = json_data.get(
         "override_settings").get("sd_model_checkpoint")
     if not checkpoint_path:
-        return json_data
+        return json_data, None
 
     softlink_path, model_name = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
