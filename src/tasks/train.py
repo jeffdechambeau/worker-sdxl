@@ -37,7 +37,7 @@ def make_train_command(username,  train_data_dir, resolution="512,512", model_pa
         "learning_rate": 1e-06,
         "lr_scheduler": "constant",
         "lr_warmup_steps": 0,
-        "train_batch_size": 4,
+        "train_batch_size": 2,
         "max_train_steps": 100,
         "save_every_n_epochs": 1,
         "mixed_precision": "bf16",
@@ -112,7 +112,7 @@ def run_training(input_json):
 
         with open(f'{LOGGING_DIR}/kohya_ss.log', 'w') as log_file:
             subprocess.run(training_command_list,
-                           stdout=log_file, stderr=subprocess.STDOUT)
+                           stdout=log_file, stderr=subprocess.STDOUT, check=True)
 
         delete_training_folder(user_folder)
         result = make_success_payload(
