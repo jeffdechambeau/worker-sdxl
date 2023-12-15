@@ -5,6 +5,7 @@ import subprocess
 from requests.adapters import HTTPAdapter, Retry
 from utils.size import size_config
 from utils.webhooks import send_webhook_notification
+from pprint import pprint
 
 
 LOCAL_URL = "http://127.0.0.1:3000"
@@ -46,7 +47,7 @@ def softlink_checkpoint(checkpoint_path):
     subprocess.run(["ln", "-s", checkpoint_path, softlink_path])
     print(f"Softlinked user checkpoint to {softlink_path}")
 
-    return softlink_path
+    return softlink_path, unique_id
 
 
 def refresh_checkpoints():
@@ -70,10 +71,10 @@ def handle_checkpoint(json_data):
     if not checkpoint_path:
         return json_data
 
-    softlink_path = softlink_checkpoint(checkpoint_path)
+    softlink_path, model_name = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
-    print(checkpoints)
-    [match] = [c for c in checkpoints if c['filename'] == softlink_path] or [None]
+    pprint(checkpoints)
+    [match] = [c for c in checkpoints if c['model_name'] == model_name] or [None]
 
     if not match:
         raise Exception("Checkpoint not found")
