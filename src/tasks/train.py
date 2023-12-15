@@ -17,7 +17,7 @@ LOGGING_DIR = "/workspace/logs/"
 
 def make_train_command(username,  train_data_dir, resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
 
-    config = load_config("/workspace/kohya_ss/config.json")
+    config = load_config("/workspace/config/kohya_ss.json")
     config['script'] = SCRIPT_PATH
     config['output_name'] = username
     config['output_dir'] = CHECKPOINT_OUTPUT_PATH
