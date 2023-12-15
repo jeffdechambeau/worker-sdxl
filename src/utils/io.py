@@ -1,5 +1,6 @@
 
 import os
+import json
 
 
 def make_success_payload(username, token_name, class_name, output_file):
@@ -50,3 +51,8 @@ def delete_checkpoint(delete_path):
             "status": "error",
             "error": str(e)
         }
+
+
+def load_config(file_path):
+    with open(file_path, 'r') as file:
+        return json.load(file)

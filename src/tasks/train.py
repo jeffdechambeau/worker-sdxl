@@ -6,7 +6,7 @@ from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 from utils.webhooks import send_webhook_notification
 from utils.shell import make_command_from_json
-from utils.io import make_success_payload, make_error_payload, unpack_json, delete_checkpoint
+from utils.io import make_success_payload, make_error_payload, unpack_json, delete_checkpoint, load_config
 
 SCRIPT_PATH = '/workspace/kohya_ss/sdxl_train.py'
 TRAIN_DATA_DIR_BASE = '/workspace/witit-custom/active_training'
@@ -17,49 +17,14 @@ LOGGING_DIR = "/workspace/logs/"
 
 def make_train_command(username,  train_data_dir, resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
 
-    config = {
-        "num_cpu_threads_per_process": 4,
-        "script": SCRIPT_PATH,
-        "resolution": resolution,
-        "output_name": username,
-        "output_dir": CHECKPOINT_OUTPUT_PATH,
-        "logging_dir": LOGGING_DIR,
-        "pretrained_model_name_or_path": model_path,
-        "train_data_dir": train_data_dir,
-        "enable_bucket": True,
-        "min_bucket_reso": 256,
-        "max_bucket_reso": 1024,
-        "save_model_as": "safetensors",
-        "lr_scheduler_num_cycles": 1,
-        "max_data_loader_n_workers": 0,
-        "learning_rate_te1": 0.0,
-        "learning_rate_te2": 0.0,
-        "learning_rate": 1e-06,
-        "lr_scheduler": "constant",
-        "lr_warmup_steps": 0,
-        "train_batch_size": 2,
-        "max_train_steps": 100,
-        "save_every_n_epochs": 1,
-        "mixed_precision": "bf16",
-        "save_precision": "fp16",
-        "cache_latents": True,
-        "cache_latents_to_disk": True,
-        "optimizer_type": "Adafactor",
-        "optimizer_args": {
-            "scale_parameter": "True",
-            "relative_step": "True",
-            "warmup_init": "True",
-            "weight_decay": "2"
-        },
-        "max_token_length": 150,
-        "keep_tokens": 1,
-        "caption_dropout_rate": 0.1,
-        "bucket_reso_steps": 32,
-        "shuffle_caption": True,
-        "caption_extension": ".txt",
-        "noise_offset": 0.0,
-        "max_grad_norm": 0.0,
-    }
+    config = load_config("/workspace/kohya_ss/config.json")
+    config['script'] = SCRIPT_PATH
+    config['output_name'] = username
+    config['output_dir'] = CHECKPOINT_OUTPUT_PATH
+    config['logging_dir'] = LOGGING_DIR
+    config['pretrained_model_name_or_path'] = model_path
+    config['train_data_dir'] = train_data_dir
+    config['resolution'] = resolution
 
     command = make_command_from_json(config)
 

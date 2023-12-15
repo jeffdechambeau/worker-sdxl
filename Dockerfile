@@ -56,6 +56,7 @@ RUN git clone https://github.com/bmaltais/kohya_ss.git . && \
 WORKDIR /
 COPY src/ /
 COPY builder/accelerate.yaml /root/.cache/huggingface/accelerate/default_config.yaml
+COPY builder/config/ /config
 
 RUN ln -s /runpod-volume /workspace && \
     chmod +x setup.sh && \
