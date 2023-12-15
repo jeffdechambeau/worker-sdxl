@@ -119,7 +119,8 @@ def run_training(input_json):
                            stdout=log_file, stderr=subprocess.STDOUT)
 
         delete_training_folder(user_folder)
-        result = make_success_payload()
+        result = make_success_payload(
+            username, token_name, class_name, output_file)
         print(f"Training finished: {output_file}")
 
     except Exception as e:
