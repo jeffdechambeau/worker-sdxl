@@ -4,24 +4,6 @@ def format_arg(value):
     return str(value)
 
 
-def make_command_from_json_alt(json_data):
-    command = []
-    for key, value in json_data.items():
-        if key == "script":
-            command.append(f'"{value}"')
-        elif isinstance(value, bool):
-            if value:
-                command.append(f"--{key}")
-        elif isinstance(value, (int, float, str)) and value:
-            command.append(f"--{key} {format_arg(value)}")
-        elif isinstance(value, dict):
-            nested_args = ' '.join(
-                f"{nested_key}={format_arg(nested_value)}" for nested_key, nested_value in value.items())
-            command.append(f"--{key} {nested_args}")
-
-    return ' '.join(command)
-
-
 def make_command_from_json(json_data):
     command = []
     for key, value in json_data.items():

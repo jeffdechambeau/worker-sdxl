@@ -1,37 +1,36 @@
 import subprocess
 import os
+import shlex
 
 from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 from utils.webhooks import send_webhook_notification
 from utils.shell import make_command_from_json
+from utils.io import make_success_payload, make_error_payload, unpack_json
 
-script_path = '/workspace/kohya_ss/sdxl_train.py'
-train_data_dir_base = '/workspace/witit-custom/active_training'
-pretrained_model_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
-checkpoint_output_path = "/workspace/witit-custom/checkpoints"
-logging_dir = "/workspace/logs/"
+SCRIPT_PATH = '/workspace/kohya_ss/sdxl_train.py'
+TRAIN_DATA_DIR_BASE = '/workspace/witit-custom/active_training'
+PRETRAINED_MODEL_PATH = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
+CHECKPOINT_OUTPUT_PATH = "/workspace/witit-custom/checkpoints"
+LOGGING_DIR = "/workspace/logs/"
 
 
-def make_train_command(username="undefined", resolution="512,512", train_data_dir="/workspace/witit-custom/active_training", model_path=pretrained_model_path):
-    output_dir = f'/workspace/witit-custom/checkpoints/'
-    print(f"Output dir: {output_dir}")
+def make_train_command(username,  train_data_dir, resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
 
     config = {
         "num_cpu_threads_per_process": 4,
-        "script": script_path,
+        "script": SCRIPT_PATH,
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": train_data_dir,
         "resolution": resolution,
-        "output_dir": output_dir,
+        "output_dir": CHECKPOINT_OUTPUT_PATH,
         "output_name": username,
         "enable_bucket": True,
         "min_bucket_reso": 256,
         "max_bucket_reso": 1024,
-        "logging_dir": "/workspace/logs/",
+        "logging_dir": LOGGING_DIR,
         "save_model_as": "safetensors",
         "lr_scheduler_num_cycles": 1,
-        "max_token_length": 150,
         "max_data_loader_n_workers": 0,
         "learning_rate_te1": 0.0,
         "learning_rate_te2": 0.0,
@@ -70,10 +69,12 @@ def make_train_command(username="undefined", resolution="512,512", train_data_di
 
           """)
 
-    return f"accelerate launch {command}"
+    output_file = f'{CHECKPOINT_OUTPUT_PATH}/{username}.safetensors'
+    final_command = f"accelerate launch {command}"
+    return final_command, output_file
 
 
-def prepare_folder(username, images, token_name, class_name, train_data_dir_base=train_data_dir_base, repeats=40):
+def prepare_folder(username, images, token_name, class_name, train_data_dir_base=TRAIN_DATA_DIR_BASE, repeats=40):
     user_folder = os.path.join(train_data_dir_base, username)
     images_folder = os.path.join(user_folder, "img")
     training_folder = os.path.join(
@@ -88,52 +89,42 @@ def prepare_folder(username, images, token_name, class_name, train_data_dir_base
 
 def run_training(input_json):
 
-    username = input_json['username']
-    images = input_json['images']
-    resolution = input_json['training_resolution']
-    token_name = input_json['token']
-    class_name = input_json['class']
-    model_path = input_json['model_path']
+    username, images, resolution, token_name, class_name, model_path = unpack_json(
+        input_json)
 
-    images_folder = os.path.join(train_data_dir_base, username, "img")
-    training_command = make_train_command(
-        username, resolution, images_folder, model_path)
-    output_file = f'{checkpoint_output_path}/{username}.safetensors'
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
 
-    print(f"User folder: {user_folder}")
-    print(f"Images folder: {images_folder}")
-    print(f"Training folder: {training_folder}")
-    print(f"Full training command: {training_command}")
+    training_command, output_file = make_train_command(
+        username, images_folder, resolution, model_path)
+
+    print(f"""
+    username: {username}
+    resolution: {resolution}
+    token_name: {token_name}
+    class_name: {class_name}
+    model_path: {model_path}
+    user_folder: {user_folder}
+    images_folder: {images_folder}
+    training_folder: {training_folder}
+    training_command: {training_command}""")
 
     try:
-        os.makedirs(logging_dir, exist_ok=True)
+        os.makedirs(LOGGING_DIR, exist_ok=True)
 
-        # Using 'tee' to duplicate the output to both log file and container shell
-        subprocess.run(
-            f"bash -c '{training_command} | tee /workspace/logs/kohya_ss.log 2>&1'", shell=True, check=True)
+        training_command_list = shlex.split(training_command)
+        with open(f'{LOGGING_DIR}/kohya_ss.log', 'w') as log_file:
+            subprocess.run(training_command_list,
+                           stdout=log_file, stderr=subprocess.STDOUT)
 
         print(f"Training finished: {output_file}")
         delete_training_folder(user_folder)
 
-        result = {
-            "status": "success",
-            "custom_checkpoint_path": output_file,
-            "username": username,
-            "token": token_name,
-            "class": class_name,
-            "cleanup_complete": True
-        }
+        result = make_success_payload()
 
     except Exception as e:
         delete_training_folder(user_folder)
-        result = {
-            "status": "error",
-            "error": str(e),
-            "cleanup_complete": True
-        }
-        print(f"Error running training: {e}")
+        result = make_error_payload(e)
 
     if 'webhook' in input_json:
         send_webhook_notification(input_json['webhook'], result)

@@ -2,9 +2,6 @@ import shutil
 import os
 
 
-import os
-
-
 def inspect_path(path):
     if not os.path.exists(path):
         print("The path does not exist.")
