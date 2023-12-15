@@ -56,7 +56,7 @@ def run_training(input_json):
         username, images, token_name, class_name)
 
     training_command, output_file = make_train_command(
-        username, images_folder, resolution, model_path)
+        username,  resolution, model_path)
 
     print(f"""
             username: {username}
