@@ -74,10 +74,10 @@ def run_training(input_json):
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
 
-        training_command_list = shlex.split(training_command)
+        # training_command_list = shlex.split(training_command)
 
         with open(f'{LOGGING_DIR}/kohya_ss.log', 'w') as log_file:
-            subprocess.run(training_command_list,
+            subprocess.run(training_command, shell=True,
                            stdout=log_file, stderr=subprocess.STDOUT, check=True)
 
         delete_training_folder(user_folder)
