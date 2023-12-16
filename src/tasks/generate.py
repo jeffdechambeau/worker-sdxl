@@ -68,14 +68,16 @@ def refresh_checkpoints():
 
 
 def handle_checkpoint(json_data):
+    if 'override_settings' not in json_data or 'sd_model_checkpoint' not in json_data.get('override_settings'):
+        return json_data, None
+
     checkpoint_path = json_data.get(
         "override_settings").get("sd_model_checkpoint")
-    if not checkpoint_path:
-        return json_data, None
 
     softlink_path, model_name = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
     pprint(checkpoints)
+
     try:
         [match] = [c for c in checkpoints if c['model_name'] == model_name]
         json_data['override_settings']['sd_model_checkpoint'] = softlink_path
