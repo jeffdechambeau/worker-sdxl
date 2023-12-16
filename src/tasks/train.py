@@ -21,7 +21,7 @@ def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MO
         "num_cpu_threads_per_process": 4,
         "script": SCRIPT_PATH,
         "pretrained_model_name_or_path": model_path,
-        "train_data_dir": os.path.join(TRAIN_DATA_DIR_BASE, username),
+        "train_data_dir": os.path.join(TRAIN_DATA_DIR_BASE, username, "img"),
         "resolution": resolution,
         "output_name": username,
         **load_config(CONFIG_PATH)
