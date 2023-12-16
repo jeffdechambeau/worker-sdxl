@@ -20,14 +20,11 @@ download_if_not_exists() {
 }
 
 
-
-# Check for /workspace/stable-diffusion-webui and copy if not present
 if [ ! -d "/workspace/stable-diffusion-webui" ]; then
     echo "stable-diffusion-webui not found in workspace. Copying now..."
     cp -r /stable-diffusion-webui /workspace/stable-diffusion-webui
 fi
 
-# Check for /workspace/kohya_ss and copy if not present
 if [ ! -d "/workspace/kohya_ss" ]; then
     echo "kohya_ss not found in workspace. Copying now..."
     cp -r /kohya_ss /workspace/kohya_ss
@@ -62,3 +59,18 @@ parser_path=" /workspace/stable-diffusion-webui/repositories/CodeFormer/weights/
 parser_url="https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/parsing_parsenet.pth"
 download_if_not_exists "$parser_path" "$parser_url"
 
+# Set up workspace/configs
+SOURCE_DIR="/config"
+DEST_DIR="/workspace/config"
+
+mkdir -p "$DEST_DIR"
+
+for file in "$SOURCE_DIR"/*; do
+    filename=$(basename "$file")
+    if [ ! -f "$DEST_DIR/$filename" ]; then
+        cp "$file" "$DEST_DIR/"
+        echo "Copied $filename to $DEST_DIR"
+    else
+        echo "$filename already exists in $DEST_DIR"
+    fi
+done

@@ -1,9 +1,11 @@
+import uuid
 import os
 import requests
 import subprocess
 from requests.adapters import HTTPAdapter, Retry
 from utils.size import size_config
 from utils.webhooks import send_webhook_notification
+from pprint import pprint
 
 
 LOCAL_URL = "http://127.0.0.1:3000"
@@ -35,14 +37,17 @@ def hotswap_resolution(json):
 
 
 def softlink_checkpoint(checkpoint_path):
-    softlink_path = "/workspace/stable-diffusion-webui/models/Stable-diffusion/user.safetensors"
+    unique_id = str(uuid.uuid4())
+    softlink_path = f"/workspace/stable-diffusion-webui/models/Stable-diffusion/{unique_id}.safetensors"
 
-    if os.path.islink(softlink_path):
-        os.unlink(softlink_path)
-        print("Existing softlink removed")
+    if os.path.exists(softlink_path):
+        os.remove(softlink_path)
+        print("Existing softlink with UUID removed")
 
     subprocess.run(["ln", "-s", checkpoint_path, softlink_path])
-    print("Softlinked user checkpoint")
+    print(f"Softlinked user checkpoint to {softlink_path}")
+
+    return softlink_path, unique_id
 
 
 def refresh_checkpoints():
@@ -53,11 +58,30 @@ def refresh_checkpoints():
 
         checkpoints = automatic_session.get(
             f'{LOCAL_URL}/sdapi/v1/sd-models').json()
-        print("Checkpoints: ", checkpoints)
+        return checkpoints
 
     except Exception as err:
         print("Error: ", err)
         return None
+
+
+def handle_checkpoint(json_data):
+    checkpoint_path = json_data.get(
+        "override_settings").get("sd_model_checkpoint")
+    if not checkpoint_path:
+        return json_data, None
+
+    softlink_path, model_name = softlink_checkpoint(checkpoint_path)
+    checkpoints = refresh_checkpoints()
+
+    try:
+        [match] = [c for c in checkpoints if c['model_name'] == model_name]
+        json_data['override_settings']['sd_model_checkpoint'] = softlink_path
+        return json_data, softlink_path
+    except Exception as err:
+        print("Error: ", err)
+        os.remove(softlink_path)
+        raise Exception(f"Checkpoint {model_name} not found")
 
 
 def generate_handler(json_data):
@@ -65,15 +89,7 @@ def generate_handler(json_data):
 
     print("Generating...")
     api_name = json_data["api_name"]
-    checkpoint_path = json_data.get(
-        "override_settings").get("sd_model_checkpoint")
-
-    softlink_checkpoint(checkpoint_path)
-    chkpt = refresh_checkpoints()
-
-    if chkpt:
-        print("Checkpoint: ", chkpt)
-        json_data['override_settings']['sd_model_checkpoint'] = 'user.safetensors'
+    json_data, softlink_path = handle_checkpoint(json_data)
 
     try:
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
@@ -84,8 +100,8 @@ def generate_handler(json_data):
         print("Error: ", err)
         result = {"error": str(err), "json": json_data}
 
-    if chkpt:
-        os.remove(chkpt['path'])
+    if softlink_path and os.path.exists(softlink_path):
+        os.remove(softlink_path)
 
     if 'webhook' in json_data:
         send_webhook_notification(json_data['webhook'], {
