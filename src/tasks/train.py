@@ -1,6 +1,7 @@
 import subprocess
 import os
 import shlex
+import uuid
 
 from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
@@ -29,7 +30,7 @@ def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MO
 
     command = make_command_from_json(config)
 
-    output_file = f'{config["output_dir"]}/{username}.safetensors'
+    output_file = f'{config["output_dir"]}/{str(uuid.uuid4())}-{username}.safetensors'
     final_command = f"accelerate launch {command}"
     return final_command, output_file
 

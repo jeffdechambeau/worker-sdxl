@@ -38,7 +38,9 @@ def hotswap_resolution(json):
 
 def softlink_checkpoint(checkpoint_path):
     unique_id = str(uuid.uuid4())
-    softlink_path = f"/workspace/stable-diffusion-webui/models/Stable-diffusion/{unique_id}.safetensors"
+    filename = os.path.basename(checkpoint_path)
+
+    softlink_path = f"/workspace/stable-diffusion-webui/models/Stable-diffusion/{filename}"
 
     if os.path.exists(softlink_path):
         os.remove(softlink_path)
