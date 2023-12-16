@@ -38,7 +38,7 @@ def hotswap_resolution(json):
 
 def softlink_checkpoint(checkpoint_path):
     filename = os.path.basename(checkpoint_path)
-    [model_title, ext] = os.path.splitext(filename)
+    [model_name, ext] = os.path.splitext(filename)
 
     softlink_path = f"/workspace/stable-diffusion-webui/models/Stable-diffusion/{filename}"
 
@@ -49,7 +49,7 @@ def softlink_checkpoint(checkpoint_path):
     subprocess.run(["ln", "-s", checkpoint_path, softlink_path])
     print(f"Softlinked user checkpoint to {softlink_path}")
 
-    return softlink_path, model_title
+    return softlink_path, model_name
 
 
 def refresh_checkpoints():
@@ -74,24 +74,24 @@ def handle_checkpoint(json_data):
     checkpoint_path = json_data.get(
         "override_settings").get("sd_model_checkpoint")
 
-    softlink_path, model_title = softlink_checkpoint(checkpoint_path)
+    softlink_path, model_name = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
     pprint(checkpoints)
 
     # Find the matching checkpoint
     match = None
     for c in checkpoints:
-        if c['title'] == model_title:
+        if c['model_name'] == model_name:
             match = c
             break
 
     if match is not None:
-        json_data['override_settings']['sd_model_checkpoint'] = model_title
+        json_data['override_settings']['sd_model_checkpoint'] = model_name
         return json_data, softlink_path
     else:
-        print(f"Checkpoint {model_title} not found")
+        print(f"Checkpoint {model_name} not found")
         os.remove(softlink_path)
-        raise Exception(f"Checkpoint {model_title} not found")
+        raise Exception(f"Checkpoint {model_name} not found")
 
 
 def generate_handler(json_data):
