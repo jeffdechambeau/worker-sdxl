@@ -94,12 +94,24 @@ def handle_checkpoint(json_data):
         raise Exception(f"Checkpoint {model_name} not found")
 
 
+def refresh_vae():
+    try:
+        response = automatic_session.post(
+            f'{LOCAL_URL}/sdapi/v1/refresh-vae')
+        response.raise_for_status()
+
+    except Exception as err:
+        print("Error: ", err)
+        return None
+
+
 def generate_handler(json_data):
     result = {}
 
     print("Generating...")
     api_name = json_data["api_name"]
     json_data, softlink_path = handle_checkpoint(json_data)
+    refresh_vae()
 
     try:
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
