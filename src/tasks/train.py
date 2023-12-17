@@ -1,6 +1,7 @@
 import subprocess
 import os
 import shlex
+import uuid
 
 from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
@@ -16,6 +17,7 @@ CONFIG_PATH = "/workspace/config/kohya_ss.json"
 
 
 def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
+    output_name = f"{str(uuid.uuid4())}-{username}"
 
     config = {
         "num_cpu_threads_per_process": 4,
@@ -23,13 +25,13 @@ def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MO
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": os.path.join(TRAIN_DATA_DIR_BASE, username, "img"),
         "resolution": resolution,
-        "output_name": username,
+        "output_name": output_name,
         **load_config(CONFIG_PATH)
     }
 
     command = make_command_from_json(config)
 
-    output_file = f'{config["output_dir"]}/{username}.safetensors'
+    output_file = f'{config["output_dir"]}/{output_name}.safetensors'
     final_command = f"accelerate launch {command}"
     return final_command, output_file
 
