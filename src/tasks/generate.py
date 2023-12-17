@@ -76,13 +76,13 @@ def handle_checkpoint(json_data):
 
     softlink_path, model_name = softlink_checkpoint(checkpoint_path)
     checkpoints = refresh_checkpoints()
-    pprint(checkpoints)
 
-    # Find the matching checkpoint
     match = None
     for c in checkpoints:
         if c['model_name'] == model_name:
             match = c
+            print("Found matching checkpoint:")
+            pprint(match)
             break
 
     if match is not None:
