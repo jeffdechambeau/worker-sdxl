@@ -3,8 +3,9 @@ import os
 import json
 
 
-def make_success_payload(username, token_name, class_name, output_file):
+def make_success_payload(username, token_name, class_name, output_file, job_id):
     return {
+        "job_id": job_id,
         "status": "success",
         "custom_checkpoint_path": output_file,
         "username": username,
@@ -14,9 +15,10 @@ def make_success_payload(username, token_name, class_name, output_file):
     }
 
 
-def make_error_payload(error):
+def make_error_payload(error, job_id):
     print(f"Error running training: {error}")
     return {
+        "job_id": job_id,
         "status": "error",
         "error": str(error),
         "cleanup_complete": True
@@ -26,12 +28,13 @@ def make_error_payload(error):
 def unpack_json(json):
     username = json['username']
     images = json['images']
-    resolution = json['training_resolution']
+    resolution = json.get("training_resolution", "512,512")
     token_name = json['token']
     class_name = json['class']
     model_path = json['model_path']
+    job_id = json.get('job_id', None)
 
-    return username, images, resolution, token_name, class_name, model_path
+    return username, images, resolution, token_name, class_name, model_path, job_id
 
 
 def delete_checkpoint(delete_path):

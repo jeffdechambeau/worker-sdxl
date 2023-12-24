@@ -51,7 +51,7 @@ def prepare_folder(username, images, token_name, class_name, repeats=40):
 
 
 def run_training(input_json):
-    username, images, resolution, token_name, class_name, model_path = unpack_json(
+    username, images, resolution, token_name, class_name, model_path, job_id = unpack_json(
         input_json)
 
     user_folder, images_folder, training_folder = prepare_folder(
@@ -84,12 +84,12 @@ def run_training(input_json):
 
         delete_training_folder(user_folder)
         result = make_success_payload(
-            username, token_name, class_name, output_file)
+            username, token_name, class_name, output_file, job_id)
         print(f"Training finished: {output_file}")
 
     except Exception as e:
         delete_training_folder(user_folder)
-        result = make_error_payload(e)
+        result = make_error_payload(e, job_id)
 
     if 'webhook' in input_json:
         send_webhook_notification(input_json['webhook'], result)
