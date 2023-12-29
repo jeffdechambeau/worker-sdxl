@@ -33,8 +33,12 @@ def unpack_json(json):
     class_name = json['class']
     model_path = json['model_path']
     job_id = json.get('job_id', None)
+    epochs = json.get('epochs', 3)
+    save_every_n_epochs = json.get('save_every_n_epochs', epochs)
+    batch_size = json.get('batch_size', 1)
+    learning_rate = json.get('learning_rate', 0.0001)
 
-    return username, images, resolution, token_name, class_name, model_path, job_id
+    return username, images, resolution, token_name, class_name, model_path, job_id, save_every_n_epochs, epochs, batch_size, learning_rate
 
 
 def delete_checkpoint(delete_path):

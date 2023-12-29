@@ -16,17 +16,20 @@ LOGGING_DIR = "/workspace/logs/"
 CONFIG_PATH = "/workspace/config/kohya_ss.json"
 
 
-def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MODEL_PATH):
+def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MODEL_PATH, epochs=3, save_every_n_epochs=3, batch_size=1, learning_rate=0.0001):
     output_name = f"{str(uuid.uuid4())}-{username}"
 
     config = {
-        "num_cpu_threads_per_process": 4,
+        **load_config(CONFIG_PATH),
         "script": SCRIPT_PATH,
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": os.path.join(TRAIN_DATA_DIR_BASE, username, "img"),
         "resolution": resolution,
         "output_name": output_name,
-        **load_config(CONFIG_PATH)
+        "max_train_epochs": epochs,
+        "save_every_n_epochs": save_every_n_epochs,
+        "batch_size": batch_size,
+        "learning_rate": learning_rate
     }
 
     command = make_command_from_json(config)
@@ -51,14 +54,14 @@ def prepare_folder(username, images, token_name, class_name, repeats=40):
 
 
 def run_training(input_json):
-    username, images, resolution, token_name, class_name, model_path, job_id = unpack_json(
+    username, images, resolution, token_name, class_name, model_path, job_id, save_every_n_epochs, epochs, batch_size, learning_rate = unpack_json(
         input_json)
 
     user_folder, images_folder, training_folder = prepare_folder(
         username, images, token_name, class_name)
 
     training_command, output_file = make_train_command(
-        username,  resolution, model_path)
+        username,  resolution, model_path, epochs, save_every_n_epochs, batch_size, learning_rate)
 
     print(f"""
             username: {username}
