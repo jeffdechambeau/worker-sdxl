@@ -20,15 +20,15 @@ def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MO
     output_name = f"{str(uuid.uuid4())}-{username}"
 
     config = {
-        **load_config(CONFIG_PATH),
         "script": SCRIPT_PATH,
+        **load_config(CONFIG_PATH),
         "pretrained_model_name_or_path": model_path,
         "train_data_dir": os.path.join(TRAIN_DATA_DIR_BASE, username, "img"),
         "resolution": resolution,
         "output_name": output_name,
         "max_train_epochs": epochs,
         "save_every_n_epochs": save_every_n_epochs,
-        "batch_size": batch_size,
+        "train_batch_size": batch_size,
         "learning_rate": learning_rate
     }
 
