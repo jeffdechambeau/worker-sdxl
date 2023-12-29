@@ -9,7 +9,7 @@
   "max_data_loader_n_workers": 0,
   "learning_rate_te1": 0.0,
   "learning_rate_te2": 0.0,
-  "learning_rate": 1e-5,
+  "learning_rate": 1e-6,
   "lr_scheduler": "constant",
   "lr_warmup_steps": 0,
   "lr_scheduler_num_cycles": 1,
@@ -35,6 +35,5 @@
   "shuffle_caption": false,
   "noise_offset": 0.0,
   "max_grad_norm": 0.0,
-  "gradient_checkpointing": false,
-  "vae": ""
+  "gradient_checkpointing": false
 }
