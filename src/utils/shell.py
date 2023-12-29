@@ -5,6 +5,7 @@ def format_arg(value):
 
 
 def make_command_from_json(json_data):
+    print("json_data", json_data)
     command = []
     for key, value in json_data.items():
         if key == "script":
