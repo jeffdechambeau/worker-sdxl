@@ -31,9 +31,13 @@ if [ ! -d "/workspace/kohya_ss" ]; then
 fi
 
 # Define paths, URLs, and softlink locations
-sd_path=""/workspace/stable-diffusion-webui/models/Stable-diffusion/v1-5-pruned-emaonly.safetensors
-sd_url="https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors?download=true"
-download_if_not_exists "$sd_path" "$sd_url"
+#sd_path="/workspace/stable-diffusion-webui/models/Stable-diffusion/v1-5-pruned-emaonly.safetensors"
+#sd_url="https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors?download=true"
+#download_if_not_exists "$sd_path" "$sd_url"
+
+sdxl_base_path="/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors"
+sdxl_base_url="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
+download_if_not_exists "$sdxl_base_path" "$sdxl_base_url"
 
 rundiffusionXL_path="/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
 rundiffusionXL_url="https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiffusionXL_beta.safetensors?rlkey=2674n1a85jns6opu3wacp9haq&dl=1"
