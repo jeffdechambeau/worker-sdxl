@@ -9,12 +9,13 @@ from utils.webhooks import send_webhook_notification
 from utils.shell import make_command_from_json
 from utils.io import make_success_payload, make_error_payload, delete_checkpoint, load_config
 
-SCRIPT_PATH = os.environ.get(
-    'SCRIPT_PATH', '/workspace/kohya_ss/sdxl_train.py')
-TRAIN_DATA_DIR_BASE = os.environ.get(
-    'TRAIN_DATA_DIR_BASE', '/workspace/witit-custom/active_training')
-PRETRAINED_MODEL_PATH = os.environ.get(
-    'PRETRAINED_MODEL_PATH', '/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors')
+script_path = '/workspace/kohya_ss/sdxl_train.py'
+train_dir_base = '/workspace/witit-custom/active_training'
+model_path = '/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors'
+
+SCRIPT_PATH = os.environ.get('SCRIPT_PATH', script_path)
+TRAIN_DATA_DIR_BASE = os.environ.get('TRAIN_DATA_DIR_BASE', train_dir_base)
+PRETRAINED_MODEL_PATH = os.environ.get('PRETRAINED_MODEL_PATH', model_path)
 LOGGING_DIR = os.environ.get('LOGGING_DIR', '/workspace/logs/')
 CONFIG_PATH = os.environ.get('CONFIG_PATH', '/workspace/config/kohya_ss.json')
 MAX_CPU_THREADS = os.environ.get('MAX_CPU_THREADS', 4)
@@ -25,14 +26,17 @@ def make_train_command(input_json):
     output_name = f"{str(uuid.uuid4())}-{json['username']}"
     train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
 
-    del json['username']
-    del json['images']
-    del json['job_id']
-    del json['webhook']
-    del json['api_name']
+    keys_to_remove = ['inspect_path',
+                      'checkpoint_to_delete',
+                      'username',
+                      'images',
+                      'job_id',
+                      'webhook',
+                      'api_name']
 
-    del json['script']
-    del json['num_cpu_threads_per_process']
+    for key in keys_to_remove:
+        if key in json:
+            del json[key]
 
     config = {
         "num_cpu_threads_per_process": MAX_CPU_THREADS,
