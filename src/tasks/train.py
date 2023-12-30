@@ -20,7 +20,8 @@ CONFIG_PATH = os.environ.get('CONFIG_PATH', '/workspace/config/kohya_ss.json')
 MAX_CPU_THREADS = os.environ.get('MAX_CPU_THREADS', 4)
 
 
-def make_train_command(json):
+def make_train_command(input_json):
+    json = input_json.copy()
     output_name = f"{str(uuid.uuid4())}-{json['username']}"
     train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
 
@@ -29,6 +30,9 @@ def make_train_command(json):
     del json['job_id']
     del json['webhook']
     del json['api_name']
+
+    del json['script']
+    del json['num_cpu_threads_per_process']
 
     config = {
         "num_cpu_threads_per_process": MAX_CPU_THREADS,
