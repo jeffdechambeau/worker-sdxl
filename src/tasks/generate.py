@@ -40,6 +40,10 @@ def softlink_checkpoint(checkpoint_path):
     filename = os.path.basename(checkpoint_path)
     [model_name, ext] = os.path.splitext(filename)
 
+    if 'witit-custom' not in checkpoint_path:
+        print("Not a custom checkpoint, skipping softlink")
+        return checkpoint_path, model_name
+
     softlink_path = f"/workspace/stable-diffusion-webui/models/Stable-diffusion/{filename}"
 
     if os.path.exists(softlink_path):
