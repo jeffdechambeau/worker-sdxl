@@ -26,13 +26,18 @@ def make_train_command(input_json):
     output_name = f"{str(uuid.uuid4())}-{json['username']}"
     train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
 
-    keys_to_remove = ['inspect_path',
-                      'checkpoint_to_delete',
-                      'username',
-                      'images',
-                      'job_id',
-                      'webhook',
-                      'api_name']
+    keys_to_remove = [
+        'inspect_path',
+        'checkpoint_to_delete',
+        'num_cpu_threads_per_process',
+        'script',
+        'train_data_dir',
+        'username',
+        'images',
+        'job_id',
+        'webhook',
+        'api_name'
+    ]
 
     for key in keys_to_remove:
         if key in json:
@@ -79,9 +84,9 @@ def run_training(json):
     print(f"""
             username: {json['username']}
             resolution: {json['resolution']}
-            token_name: {json['token_name']}
-            class_name: {json['class_name']}
-            model_path: {json['model_path']}
+            token: {json['token']}
+            class_name: {json['class']}
+            model: {json['model_path']}
             output_file: {output_file} 
             user_folder: {user_folder}
             images_folder: {images_folder}
