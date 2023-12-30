@@ -14,12 +14,14 @@ TRAIN_DATA_DIR_BASE = '/workspace/witit-custom/active_training'
 PRETRAINED_MODEL_PATH = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
 LOGGING_DIR = "/workspace/logs/"
 CONFIG_PATH = "/workspace/config/kohya_ss.json"
+MAX_CPU_THREADS = 4
 
 
 def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MODEL_PATH, epochs=3, save_every_n_epochs=3, batch_size=1, learning_rate=0.0001):
     output_name = f"{str(uuid.uuid4())}-{username}"
 
     config = {
+        "num_cpu_threads_per_process": MAX_CPU_THREADS,
         "script": SCRIPT_PATH,
         **load_config(CONFIG_PATH),
         "pretrained_model_name_or_path": model_path,
