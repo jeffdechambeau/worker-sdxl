@@ -19,7 +19,6 @@ download_if_not_exists() {
     fi
 }
 
-
 if [ ! -d "/workspace/stable-diffusion-webui" ]; then
     echo "stable-diffusion-webui not found in workspace. Copying now..."
     cp -r /stable-diffusion-webui /workspace/stable-diffusion-webui
