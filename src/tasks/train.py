@@ -7,31 +7,35 @@ from utils.folders import inspect_path, delete_training_folder
 from utils.images import process_image
 from utils.webhooks import send_webhook_notification
 from utils.shell import make_command_from_json
-from utils.io import make_success_payload, make_error_payload, unpack_json, delete_checkpoint, load_config
+from utils.io import make_success_payload, make_error_payload, delete_checkpoint, load_config
 
-SCRIPT_PATH = '/workspace/kohya_ss/sdxl_train.py'
-TRAIN_DATA_DIR_BASE = '/workspace/witit-custom/active_training'
-PRETRAINED_MODEL_PATH = "/workspace/stable-diffusion-webui/models/Stable-diffusion/rundiffusionXL.safetensors"
-LOGGING_DIR = "/workspace/logs/"
-CONFIG_PATH = "/workspace/config/kohya_ss.json"
-MAX_CPU_THREADS = 4
+SCRIPT_PATH = os.environ.get(
+    'SCRIPT_PATH', '/workspace/kohya_ss/sdxl_train.py')
+TRAIN_DATA_DIR_BASE = os.environ.get(
+    'TRAIN_DATA_DIR_BASE', '/workspace/witit-custom/active_training')
+PRETRAINED_MODEL_PATH = os.environ.get(
+    'PRETRAINED_MODEL_PATH', '/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors')
+LOGGING_DIR = os.environ.get('LOGGING_DIR', '/workspace/logs/')
+CONFIG_PATH = os.environ.get('CONFIG_PATH', '/workspace/config/kohya_ss.json')
+MAX_CPU_THREADS = os.environ.get('MAX_CPU_THREADS', 4)
 
 
-def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MODEL_PATH, epochs=3, save_every_n_epochs=3, batch_size=1, learning_rate=0.0001):
-    output_name = f"{str(uuid.uuid4())}-{username}"
+def make_train_command(json):
+    output_name = f"{str(uuid.uuid4())}-{json['username']}"
+    train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
+
+    del json['username']
+    del json['images']
+    del json['job_id']
+    del json['webhook']
+    del json['api_name']
 
     config = {
         "num_cpu_threads_per_process": MAX_CPU_THREADS,
         "script": SCRIPT_PATH,
+        "train_data_dir": train_data_dir,
         **load_config(CONFIG_PATH),
-        "pretrained_model_name_or_path": model_path,
-        "train_data_dir": os.path.join(TRAIN_DATA_DIR_BASE, username, "img"),
-        "resolution": resolution,
-        "output_name": output_name,
-        "max_train_epochs": epochs,
-        "save_every_n_epochs": save_every_n_epochs,
-        "train_batch_size": batch_size,
-        "learning_rate": learning_rate
+        **json
     }
 
     command = make_command_from_json(config)
@@ -41,7 +45,7 @@ def make_train_command(username,  resolution="512,512", model_path=PRETRAINED_MO
     return final_command, output_file
 
 
-def prepare_folder(username, images, token_name, class_name, repeats=40):
+def prepare_folder(username=None, images=None, token_name="ohwx", class_name="person", repeats=40):
     user_folder = os.path.join(TRAIN_DATA_DIR_BASE, username)
     images_folder = os.path.join(user_folder, "img")
     training_folder = os.path.join(
@@ -55,22 +59,21 @@ def prepare_folder(username, images, token_name, class_name, repeats=40):
     return user_folder, images_folder, training_folder
 
 
-def run_training(input_json):
-    username, images, resolution, token_name, class_name, model_path, job_id, save_every_n_epochs, epochs, batch_size, learning_rate = unpack_json(
-        input_json)
+def run_training(json):
+    job_id = json.get('job_id')
+    webhook = json.get('webhook')
 
     user_folder, images_folder, training_folder = prepare_folder(
-        username, images, token_name, class_name)
+        username=json['username'], images=json['images'], token_name=json['token'], class_name=json['class'])
 
-    training_command, output_file = make_train_command(
-        username,  resolution, model_path, epochs, save_every_n_epochs, batch_size, learning_rate)
+    training_command, output_file = make_train_command(json)
 
     print(f"""
-            username: {username}
-            resolution: {resolution}
-            token_name: {token_name}
-            class_name: {class_name}
-            model_path: {model_path}
+            username: {json['username']}
+            resolution: {json['resolution']}
+            token_name: {json['token_name']}
+            class_name: {json['class_name']}
+            model_path: {json['model_path']}
             output_file: {output_file} 
             user_folder: {user_folder}
             images_folder: {images_folder}
@@ -80,24 +83,23 @@ def run_training(input_json):
 
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
-
-        # training_command_list = shlex.split(training_command)
-
         with open(f'{LOGGING_DIR}/kohya_ss.log', 'w') as log_file:
             subprocess.run(training_command, shell=True,
                            stdout=log_file, stderr=subprocess.STDOUT, check=True)
 
         delete_training_folder(user_folder)
+
         result = make_success_payload(
-            username, token_name, class_name, output_file, job_id)
+            json['username'], json['token'], json['class'], output_file, job_id)
+
         print(f"Training finished: {output_file}")
 
     except Exception as e:
         delete_training_folder(user_folder)
         result = make_error_payload(e, job_id)
 
-    if 'webhook' in input_json:
-        send_webhook_notification(input_json['webhook'], result)
+    if webhook:
+        send_webhook_notification(webhook, result)
 
     return result
 
