@@ -43,6 +43,10 @@ rundiffusionXL_path="/workspace/stable-diffusion-webui/models/Stable-diffusion/r
 rundiffusionXL_url="https://www.dropbox.com/scl/fi/9n9q1rjbrdfnili9ca24i/rundiffusionXL_beta.safetensors?rlkey=2674n1a85jns6opu3wacp9haq&dl=1"
 download_if_not_exists "$rundiffusionXL_path" "$rundiffusionXL_url"
 
+sdxl_turbo_path="/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_turbo_1.0_fp16.safetensors"
+sdxl_turbo_url="https://huggingface.co/stabilityai/sdxl-turbo/resolve/main/sd_xl_turbo_1.0_fp16.safetensors"
+download_if_not_exists "$sdxl_turbo_path" "$sdxl_turbo_url"
+
 sdxl_vae_path="/workspace/stable-diffusion-webui/models/VAE/sdxl_vae.safetensors"
 sdxl_vae_url="https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors"
 download_if_not_exists "$sdxl_vae_path" "$sdxl_vae_url" 
