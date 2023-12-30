@@ -36,7 +36,9 @@ def make_train_command(input_json):
         'images',
         'job_id',
         'webhook',
-        'api_name'
+        'api_name',
+        "token",
+        "class"
     ]
 
     for key in keys_to_remove:
@@ -86,7 +88,7 @@ def run_training(json):
             resolution: {json['resolution']}
             token: {json['token']}
             class_name: {json['class']}
-            model: {json['model_path']}
+            model: {json['pretrained_model_name_or_path']}
             output_file: {output_file} 
             user_folder: {user_folder}
             images_folder: {images_folder}
