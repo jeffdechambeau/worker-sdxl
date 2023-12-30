@@ -13,6 +13,8 @@ automatic_session = requests.Session()
 is_training_pod_only = os.environ.get(
     'IS_TRAINING_POD_ONLY', 'False').lower() == 'true'
 
+IS_DEV = os.environ.get('IS_DEV', 'False').lower() == 'true'
+
 
 def wait_for_service(url=f'{LOCAL_URL}/sdapi/v1/options'):
     if is_training_pod_only:
@@ -101,9 +103,10 @@ def handler(event):
 
 
 if __name__ == "__main__":
-    wait_for_service()
 
-    pprint("WebUI API Service is ready. Starting RunPod...")
+    if not IS_DEV:
+        wait_for_service()
+        print("WebUI API Service is ready. Starting RunPod...")
 
     runpod.serverless.start({"handler": handler,
                              "return_aggregate_stream": True})
