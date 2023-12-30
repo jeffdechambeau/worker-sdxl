@@ -1,3 +1,4 @@
+
 def format_arg(value):
     if isinstance(value, str):
         return f'"{value}"'
@@ -31,8 +32,3 @@ def make_command_from_json(json_data):
 
                             command.append(str(value))
     return f' {" ".join(command)}'
-
-
-def make_caption_command(directory):
-    command = f"python3 finetune/make_captions_by_git.py --batch_size='1' --max_data_loader_n_workers='2' --max_length='75' --caption_extension='.txt' '{directory}'"
-    return command
