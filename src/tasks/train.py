@@ -49,6 +49,7 @@ def make_train_command(input_json):
         "num_cpu_threads_per_process": MAX_CPU_THREADS,
         "script": SCRIPT_PATH,
         "train_data_dir": train_data_dir,
+        "output_name": output_name,
         **load_config(CONFIG_PATH),
         **json
     }
