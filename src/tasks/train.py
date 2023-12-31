@@ -55,9 +55,19 @@ def make_train_command(input_json):
     }
 
     command = make_command_from_json(config)
-
     output_file = f'{config["output_dir"]}/{output_name}.safetensors'
     final_command = f"accelerate launch {command}"
+
+    print(f"""
+            username: {config['username']}
+            resolution: {config['resolution']}
+            token: {config['token']}
+            class_name: {config['class']}
+            model: {config['pretrained_model_name_or_path']}
+            output_file: {output_file} 
+            training_folder: {train_data_dir}
+            training_command: {final_command}""")
+
     return final_command, output_file
 
 
@@ -83,19 +93,6 @@ def run_training(json):
         username=json['username'], images=json['images'], token_name=json['token'], class_name=json['class'])
 
     training_command, output_file = make_train_command(json)
-
-    print(f"""
-            username: {json['username']}
-            resolution: {json['resolution']}
-            token: {json['token']}
-            class_name: {json['class']}
-            model: {json['pretrained_model_name_or_path']}
-            output_file: {output_file} 
-            user_folder: {user_folder}
-            images_folder: {images_folder}
-            training_folder: {training_folder}
-            training_command: {training_command}
-    """)
 
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
