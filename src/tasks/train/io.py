@@ -42,8 +42,3 @@ def delete_checkpoint(delete_path):
             "status": "error",
             "error": str(e)
         }
-
-
-def load_config(file_path):
-    with open(file_path, 'r') as file:
-        return json.load(file)

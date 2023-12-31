@@ -5,8 +5,7 @@ import io
 import requests
 from PIL import Image
 
-train_dir_base = '/workspace/witit-custom/active_training'
-TRAIN_DATA_DIR_BASE = os.environ.get('TRAIN_DATA_DIR_BASE', train_dir_base)
+from .constants import TRAIN_DATA_DIR_BASE
 
 
 def process_image(image_string, output_dir, image_index):

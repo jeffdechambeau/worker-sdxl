@@ -3,20 +3,13 @@ import subprocess
 import os
 import uuid
 
+from utils.config import load_config
 from utils.webhooks import send_webhook_notification
 
 from .folders import inspect_path, delete_training_folder, prepare_folder
 from .shell import make_command_from_json
-from .io import make_success_payload, make_error_payload, delete_checkpoint, load_config
-
-script_path = '/workspace/kohya_ss/sdxl_train.py'
-model_path = '/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors'
-
-SCRIPT_PATH = os.environ.get('SCRIPT_PATH', script_path)
-PRETRAINED_MODEL_PATH = os.environ.get('PRETRAINED_MODEL_PATH', model_path)
-LOGGING_DIR = os.environ.get('LOGGING_DIR', '/workspace/logs/')
-CONFIG_PATH = os.environ.get('CONFIG_PATH', '/workspace/config/kohya_ss.json')
-MAX_CPU_THREADS = os.environ.get('MAX_CPU_THREADS', 4)
+from .io import make_success_payload, make_error_payload, delete_checkpoint
+from .constants import MAX_CPU_THREADS, SCRIPT_PATH, CONFIG_PATH, TRAIN_DATA_DIR_BASE, LOGGING_DIR
 
 
 def make_train_command(input_json):

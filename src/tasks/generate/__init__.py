@@ -6,15 +6,15 @@ from .payloads import build_adetailer_payload, hotswap_resolution
 import json
 
 
-def tidy_json(json):
+def tidy_json(json_data):
 
     to_delete = []
-    for key in json:
+    for key in json_data:
         if key.startswith("witit_"):
             to_delete.append(key)
 
     for key in to_delete:
-        del json[key]
+        del json_data[key]
 
 
 def generate_handler(json_data):
