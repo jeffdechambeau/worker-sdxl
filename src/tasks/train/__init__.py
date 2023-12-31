@@ -1,20 +1,18 @@
+
 import subprocess
 import os
-import shlex
 import uuid
 
-from utils.folders import inspect_path, delete_training_folder
-from utils.images import process_image
 from utils.webhooks import send_webhook_notification
-from utils.shell import make_command_from_json
-from utils.io import make_success_payload, make_error_payload, delete_checkpoint, load_config
+
+from .folders import inspect_path, delete_training_folder, prepare_folder
+from .shell import make_command_from_json
+from .io import make_success_payload, make_error_payload, delete_checkpoint, load_config
 
 script_path = '/workspace/kohya_ss/sdxl_train.py'
-train_dir_base = '/workspace/witit-custom/active_training'
 model_path = '/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors'
 
 SCRIPT_PATH = os.environ.get('SCRIPT_PATH', script_path)
-TRAIN_DATA_DIR_BASE = os.environ.get('TRAIN_DATA_DIR_BASE', train_dir_base)
 PRETRAINED_MODEL_PATH = os.environ.get('PRETRAINED_MODEL_PATH', model_path)
 LOGGING_DIR = os.environ.get('LOGGING_DIR', '/workspace/logs/')
 CONFIG_PATH = os.environ.get('CONFIG_PATH', '/workspace/config/kohya_ss.json')
@@ -71,25 +69,11 @@ def make_train_command(input_json):
     return final_command, output_file
 
 
-def prepare_folder(username=None, images=None, token_name="ohwx", class_name="person", repeats=40):
-    user_folder = os.path.join(TRAIN_DATA_DIR_BASE, username)
-    images_folder = os.path.join(user_folder, "img")
-    training_folder = os.path.join(
-        images_folder, f"{repeats}_{token_name}_{class_name}")
-
-    os.makedirs(training_folder, exist_ok=True)
-
-    for i, image_string in enumerate(images):
-        process_image(image_string, training_folder, i + 1)
-
-    return user_folder, images_folder, training_folder
-
-
 def run_training(json):
     job_id = json.get('job_id')
     webhook = json.get('webhook')
 
-    user_folder, images_folder, training_folder = prepare_folder(
+    user_folder = prepare_folder(
         username=json['username'], images=json['images'], token_name=json['token'], class_name=json['class'])
 
     training_command, output_file = make_train_command(json)
