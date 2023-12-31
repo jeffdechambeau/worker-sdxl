@@ -59,7 +59,7 @@ def make_train_command(input_json):
     final_command = f"accelerate launch {command}"
 
     print(f"""
-            username: {config['username']}
+            username: {input_json['username']}
             resolution: {config['resolution']}
             token: {config['token']}
             class_name: {config['class']}
