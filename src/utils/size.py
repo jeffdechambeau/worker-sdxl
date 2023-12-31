@@ -34,6 +34,7 @@ size_config = {
     }
 }
 
+sizes = {"small": 256, "medium": 512, "large": 768}
 
 size_config_alt = {
     "3:2": {
