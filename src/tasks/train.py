@@ -60,9 +60,9 @@ def make_train_command(input_json):
 
     print(f"""
             username: {input_json['username']}
+            token: {input_json['token']}
+            class_name: {input_json['class']}
             resolution: {config['resolution']}
-            token: {config['token']}
-            class_name: {config['class']}
             model: {config['pretrained_model_name_or_path']}
             output_file: {output_file} 
             training_folder: {train_data_dir}
