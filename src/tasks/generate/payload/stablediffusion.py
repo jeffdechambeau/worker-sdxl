@@ -1,5 +1,7 @@
 
 from utils.size import size_config
+from utils.config import load_config
+from utils.constants import SD_CONFIG_PATH
 
 
 def hotswap_resolution(json):
@@ -22,6 +24,12 @@ def hotswap_resolution(json):
     json['height'] = resolution['height']
     json['width'] = resolution['width']
     return json
+
+
+def load_defaults(json):
+    sd_defaults = load_config(SD_CONFIG_PATH)
+
+    return {**sd_defaults, **json}
 
 
 def tidy_json(json_data):

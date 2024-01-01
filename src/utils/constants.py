@@ -24,3 +24,4 @@ if is_dev:
 
 KOHYA_CONFIG_PATH = CONFIG_FOLDER_PATH + '/kohya_ss.json'
 ADETAILER_CONFIG_PATH = CONFIG_FOLDER_PATH + '/adetailer.json'
+SD_CONFIG_PATH = CONFIG_FOLDER_PATH + '/webui.json'
