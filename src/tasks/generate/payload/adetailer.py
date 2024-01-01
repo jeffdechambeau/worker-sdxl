@@ -28,5 +28,5 @@ def build_adetailer_payload(json):
             }
         ]
     }
-    json['override_settings']['sd_vae_name'] = 'sdxl_vae.safetensors'
+    json['override_settings']['sd_vae'] = 'sdxl_vae.safetensors'
     return json
