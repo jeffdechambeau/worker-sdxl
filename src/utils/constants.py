@@ -1,6 +1,7 @@
 
 import os
 is_dev = os.environ.get('IS_DEV')
+print("IS_DEV", is_dev)
 
 LOCAL_URL = "http://127.0.0.1:3000"
 
@@ -19,7 +20,7 @@ MAX_CPU_THREADS = os.environ.get('MAX_CPU_THREADS', 4)
 
 
 if is_dev:
-    LOCAL_URL = "https://a8lbi00mdlwpal-3001.proxy.runpod.net"
+    LOCAL_URL = "https://ho5rr832orny2v-3001.proxy.runpod.net"
     CONFIG_FOLDER_PATH = '/Users/jds/code/upwork/active/Nathaniel/worker-sdxl/builder/config'
 
 KOHYA_CONFIG_PATH = CONFIG_FOLDER_PATH + '/kohya_ss.json'

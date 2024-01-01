@@ -6,7 +6,7 @@ from utils.webhooks import send_webhook_notification
 
 from .session import automatic_session
 from .checkpoints import handle_checkpoint, refresh_vae
-from .payload.stablediffusion import assemble_payload
+from .payload import assemble_payload
 
 
 def generate_handler(json_data):

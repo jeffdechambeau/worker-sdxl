@@ -27,3 +27,17 @@ def upscale(json):
         "seed_resize_from_h": -1,
         "seed_resize_from_w": -1,
     }
+
+
+def restore_faces(json):
+    if 'witit_restore_faces' not in json:
+        return json
+
+    print("Setting restore faces to True")
+
+    return {
+        **json,
+        "face_restoration": True,
+        "face_restoration_model": "GFPGAN",
+        "code_former_weight": 0.5
+    }

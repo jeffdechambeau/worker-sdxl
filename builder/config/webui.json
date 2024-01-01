@@ -1,11 +1,6 @@
 {
-  "api_name": "txt2img",
+  "api_name": "txtimg",
   "username": null,
-  "witit_size": "small",
-  "witit_ar": "2:3",
-  "witit_restore_faces": true,
-  "witit_upscale_by": 1.25,
-  "witit_upscale_steps": 25,
   "alwayson_scripts": {},
   "batch_size": 1,
   "cfg_scale": 7,

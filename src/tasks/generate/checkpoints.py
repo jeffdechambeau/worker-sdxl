@@ -7,7 +7,6 @@ from utils.constants import LOCAL_URL
 
 
 def softlink_checkpoint(checkpoint_path):
-
     filename = os.path.basename(checkpoint_path)
     [model_name, ext] = os.path.splitext(filename)
 
