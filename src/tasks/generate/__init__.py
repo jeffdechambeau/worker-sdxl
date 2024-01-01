@@ -46,5 +46,4 @@ def generate_handler(json_data):
     if 'webhook' in json_data:
         send_webhook_notification(json_data['webhook'], {
                                   "json": json_data, "result": result})
-
     return result
