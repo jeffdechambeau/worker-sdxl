@@ -3,7 +3,6 @@ import os
 import subprocess
 
 from .session import automatic_session
-
 from utils.constants import LOCAL_URL
 
 
@@ -51,7 +50,9 @@ def refresh_vae():
 
 
 def handle_checkpoint(json_data):
-    if 'override_settings' not in json_data or 'sd_model_checkpoint' not in json_data.get('override_settings'):
+    if 'override_settings' not in json_data:
+        return json_data, None
+    if 'sd_model_checkpoint' not in json_data.get('override_settings'):
         return json_data, None
 
     checkpoint_path = json_data.get(
