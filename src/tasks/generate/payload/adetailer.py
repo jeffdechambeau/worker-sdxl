@@ -4,7 +4,7 @@ from utils.constants import ADETAILER_CONFIG_PATH
 
 
 def build_adetailer_payload(json):
-    if 'witit_restore_faces' not in json:
+    if 'witit_preserve_face_detail' not in json:
         return json
 
     base_settings = load_config(ADETAILER_CONFIG_PATH)
@@ -28,5 +28,5 @@ def build_adetailer_payload(json):
             }
         ]
     }
-    json['override_settings']['sd_vae'] = 'sdxl_vae.safetensors'
+
     return json
