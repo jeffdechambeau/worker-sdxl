@@ -6,19 +6,7 @@ from utils.webhooks import send_webhook_notification
 
 from .session import automatic_session
 from .checkpoints import handle_checkpoint, refresh_vae
-from .payload.stablediffusion import tidy_json, hotswap_resolution, load_defaults
-from .payload.adetailer import build_adetailer_payload
-from .payload.upscaler import upscale
-
-
-def assemble_payload(json_data):
-    json = load_defaults(json_data)
-    json = build_adetailer_payload(json)
-    json = hotswap_resolution(json)
-    json = upscale(json)
-    json = tidy_json(json)
-
-    return json
+from .payload.stablediffusion import assemble_payload
 
 
 def generate_handler(json_data):
