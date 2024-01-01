@@ -40,5 +40,5 @@ def preserve_details(json):
         ]
     }
     if 'ADetailer' not in json['alwayson_scripts']:
-        json['ADetailer'] = adetailer
+        json['alwayson_scripts']['ADetailer'] = adetailer
     return json
