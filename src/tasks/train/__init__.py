@@ -5,11 +5,11 @@ import uuid
 
 from utils.config import load_config
 from utils.webhooks import send_webhook_notification
+from utils.constants import MAX_CPU_THREADS, SCRIPT_PATH, KOHYA_CONFIG_PATH, TRAIN_DATA_DIR_BASE, LOGGING_DIR
 
 from .folders import inspect_path, delete_training_folder, prepare_folder
 from .shell import make_command_from_json
 from .io import make_success_payload, make_error_payload, delete_checkpoint
-from .constants import MAX_CPU_THREADS, SCRIPT_PATH, CONFIG_PATH, TRAIN_DATA_DIR_BASE, LOGGING_DIR
 
 
 def make_train_command(input_json):
@@ -41,7 +41,7 @@ def make_train_command(input_json):
         "script": SCRIPT_PATH,
         "train_data_dir": train_data_dir,
         "output_name": output_name,
-        **load_config(CONFIG_PATH),
+        **load_config(KOHYA_CONFIG_PATH),
         **json
     }
 

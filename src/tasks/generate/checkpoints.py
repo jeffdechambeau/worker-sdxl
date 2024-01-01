@@ -2,7 +2,9 @@
 import os
 import subprocess
 
-from .session import LOCAL_URL, automatic_session
+from .session import automatic_session
+
+from utils.constants import LOCAL_URL
 
 
 def softlink_checkpoint(checkpoint_path):

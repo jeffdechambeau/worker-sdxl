@@ -1,20 +1,22 @@
 import os
-from utils.webhooks import send_webhook_notification
-from .session import automatic_session, LOCAL_URL
-from .checkpoints import handle_checkpoint, refresh_vae
-from .payloads import build_adetailer_payload, hotswap_resolution
 import json
 
+from utils.constants import LOCAL_URL
+from utils.webhooks import send_webhook_notification
 
-def tidy_json(json_data):
+from .session import automatic_session
+from .checkpoints import handle_checkpoint, refresh_vae
+from .payload.stablediffusion import tidy_json, hotswap_resolution
+from .payload.adetailer import build_adetailer_payload
+from .payload.upscaler import upscale
 
-    to_delete = []
-    for key in json_data:
-        if key.startswith("witit_"):
-            to_delete.append(key)
 
-    for key in to_delete:
-        del json_data[key]
+def assemble_payload(json_data):
+    json = build_adetailer_payload(json_data)
+    json = hotswap_resolution(json)
+    json = upscale(json)
+    json = tidy_json(json)
+    return json
 
 
 def generate_handler(json_data):
@@ -27,11 +29,7 @@ def generate_handler(json_data):
 
     try:
         url = f'{LOCAL_URL}/sdapi/v1/{api_name}'
-        build_adetailer_payload(json_data)
-        hotswap_resolution(json_data)
-        tidy_json(json_data)
-
-        print("url", url)
+        json_data = assemble_payload(json_data)
         print(json.dumps(json_data, indent=4))
 
         response = automatic_session.post(url, json=json_data, timeout=600)

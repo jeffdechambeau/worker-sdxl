@@ -5,7 +5,7 @@ import io
 import requests
 from PIL import Image
 
-from .constants import TRAIN_DATA_DIR_BASE
+from utils.constants import TRAIN_DATA_DIR_BASE
 
 
 def process_image(image_string, output_dir, image_index):

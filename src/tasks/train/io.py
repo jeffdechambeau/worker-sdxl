@@ -1,6 +1,5 @@
 
 import os
-import json
 
 
 def make_success_payload(username, token_name, class_name, output_file, job_id):
