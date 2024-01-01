@@ -37,6 +37,7 @@ def restore_faces(json):
 
     return {
         **json,
+        "restore_faces": True,
         "face_restoration": True,
         "face_restoration_model": "GFPGAN",
         "code_former_weight": 0.5
