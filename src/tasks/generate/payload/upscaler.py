@@ -4,6 +4,7 @@ def upscale(json):
 
     prompt = json.get('prompt', "")
     height = json.get('height', "1024")
+    width = json.get('width', "1024")
     negative_prompt = json.get('negative_prompt', "")
     upscale_factor = json.get('witit_upscale_by', "1")
     upscale_steps = json.get('witit_upscale_steps', "10")
@@ -15,6 +16,7 @@ def upscale(json):
         "enable_hr": True,
         "hr_upscaler": "4xBox",
         "height": height,
+        "width": width,
         "hr_negative_prompt": negative_prompt,
         "hr_second_pass_steps": upscale_steps,
         "hr_scale": upscale_factor,
