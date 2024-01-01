@@ -14,6 +14,8 @@ SCRIPT_PATH = os.environ.get('SCRIPT_PATH', script_path)
 PRETRAINED_MODEL_PATH = os.environ.get('PRETRAINED_MODEL_PATH', model_path)
 TRAIN_DATA_DIR_BASE = os.environ.get('TRAIN_DATA_DIR_BASE', train_dir_base)
 
+RUNPOD_ID = os.environ.get('RUNPOD_POD_ID', 'unset')
+
 LOGGING_DIR = os.environ.get('LOGGING_DIR', '/workspace/logs/')
 CONFIG_FOLDER_PATH = os.environ.get('CONFIG_FOLDER', '/workspace/config')
 MAX_CPU_THREADS = os.environ.get('MAX_CPU_THREADS', 4)

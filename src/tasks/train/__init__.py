@@ -5,7 +5,7 @@ import uuid
 
 from utils.config import load_config
 from utils.webhooks import send_webhook_notification
-from utils.constants import MAX_CPU_THREADS, SCRIPT_PATH, KOHYA_CONFIG_PATH, TRAIN_DATA_DIR_BASE, LOGGING_DIR
+from utils.constants import MAX_CPU_THREADS, SCRIPT_PATH, KOHYA_CONFIG_PATH, TRAIN_DATA_DIR_BASE, LOGGING_DIR, RUNPOD_ID
 
 from .folders import inspect_path, delete_training_folder, prepare_folder
 from .shell import make_command_from_json
@@ -73,7 +73,7 @@ def run_training(json):
 
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
-        with open(f'{LOGGING_DIR}/kohya_ss.log', 'w') as log_file:
+        with open(f'{LOGGING_DIR}/{RUNPOD_ID}-kohya_ss.log', 'w') as log_file:
             subprocess.run(training_command, shell=True,
                            stdout=log_file, stderr=subprocess.STDOUT, check=True)
 
