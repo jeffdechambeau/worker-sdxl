@@ -34,6 +34,8 @@ fi
 #sd_url="https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors?download=true"
 #download_if_not_exists "$sd_path" "$sd_url"
 
+echo "Optionally grabbing resources..."
+
 sdxl_base_path="/workspace/stable-diffusion-webui/models/Stable-diffusion/sd_xl_base_1.0.safetensors"
 sdxl_base_url="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
 download_if_not_exists "$sdxl_base_path" "$sdxl_base_url"
