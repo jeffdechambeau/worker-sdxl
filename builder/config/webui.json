@@ -22,7 +22,8 @@
   "prompt": "",
   "negative_prompt": "",
   "override_settings": {
-    "sd_model_checkpoint": "rundiffusionXL.safetensors"
+    "sd_model_checkpoint": "rundiffusionXL.safetensors",
+    "sd_vae": "sdxl_vae.safetensors"
   },
   "override_settings_restore_afterwards": true,
   "restore_faces": false,

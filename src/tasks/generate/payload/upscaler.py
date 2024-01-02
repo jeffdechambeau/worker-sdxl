@@ -8,6 +8,8 @@ def upscale(json):
     negative_prompt = json.get('negative_prompt', "")
     upscale_factor = json.get('witit_upscale_by', "1")
     upscale_steps = json.get('witit_upscale_steps', "10")
+    denoising_strength = json.get(
+        'witit_upscale_denoising_strength', json.get("denoising_strength", 0.9))
 
     print(f"Setting upscale to {upscale_factor}")
 
@@ -26,6 +28,7 @@ def upscale(json):
         "seed_enable_extras": True,
         "seed_resize_from_h": -1,
         "seed_resize_from_w": -1,
+        "denoising_strength": denoising_strength
     }
 
 

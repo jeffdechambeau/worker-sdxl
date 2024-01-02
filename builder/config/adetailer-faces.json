@@ -11,7 +11,7 @@
   "ad_dilate_erode": 4,
   "ad_mask_merge_invert": null,
   "ad_inpaint_mask_blur": 8,
-  "ad_denoising_strength": "0.5",
+  "ad_denoising_strength": 0.5,
   "ad_inpaint_only_masked": true,
   "ad_inpaint_only_masked_padding": 32,
   "ad_inpaint_width": 256,
@@ -22,7 +22,7 @@
   "ad_cfg_scale": 7,
   "ad_use_checkpoint": true,
   "ad_checkpoint": "Use same checkpoint",
-  "ad_use_vae": false,
+  "ad_use_vae": true,
   "ad_vae": "Use same VAE",
   "ad_use_sampler": true,
   "ad_sampler": "DPM++ SDE Karras",
@@ -30,6 +30,6 @@
   "ad_noise_multiplier": 1,
   "ad_use_clip_skip": false,
   "ad_clip_skip": 1,
-  "ad_restore_face": false,
+  "ad_restore_face": true,
   "ad_controlnet_model": null
 }
