@@ -1,23 +1,34 @@
 from utils.size import sizes
 from utils.config import load_config
-from utils.constants import ADETAILER_CONFIG_PATH, CONFIG_FOLDER_PATH
+from utils.constants import CONFIG_FOLDER_PATH
 
 
 def make_adetailer_payload(apply, defaults, json):
     if not apply:
         return {}
 
+    bodypart = 'hands' if 'hand' in defaults['ad_model'] else 'faces'
+
     size = json.get('witit_size', "small")
-    cfg_scale = json.get('cfg_scale', 7)
-    steps = json.get('steps', 20)
     inpaint_size = sizes[size]
+
+    cfg_scale = json.get('cfg_scale', defaults['ad_cfg_scale'])
+
+    base_steps = json.get('steps', defaults['ad_steps'])
+    steps_key = f"witit_preserve_{bodypart}_steps"
+    steps = json.get(steps_key, base_steps)
+
+    denoise_key = f"witit_preserve_{bodypart}_denoising_strength"
+    denoising_strength = json.get(
+        denoise_key, defaults["ad_denoising_strength"])
 
     return {
         **defaults,
         "ad_inpaint_width": inpaint_size,
         "ad_inpaint_height": inpaint_size,
         "ad_steps": steps,
-        "ad_cfg_scale": cfg_scale
+        "ad_cfg_scale": cfg_scale,
+        "ad_denoising_strength": denoising_strength
     }
 
 
@@ -39,6 +50,7 @@ def preserve_details(json):
             make_adetailer_payload(preserve_hands, hands_defaults, json)
         ]
     }
+    print("Setting ADetailer to", adetailer)
     if 'ADetailer' not in json['alwayson_scripts']:
         json['alwayson_scripts']['ADetailer'] = adetailer
     return json
