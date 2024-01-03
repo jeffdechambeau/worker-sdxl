@@ -14,7 +14,7 @@ from .io import make_success_payload, make_error_payload, delete_checkpoint
 
 def make_train_command(input_json):
     json = input_json.copy()
-    output_name = f"{str(uuid.uuid4())}-{json['username']}"
+    output_name = f"{json['username']}-{str(uuid.uuid4())}"
     train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
 
     keys_to_remove = [
