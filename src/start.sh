@@ -12,7 +12,7 @@ isTrainingPodOnly=$(echo "${IS_TRAINING_POD_ONLY}" | tr '[:upper:]' '[:lower:]')
 if [ -z "${isTrainingPodOnly}" ] || [ "${isTrainingPodOnly}" = "false" ]; then
     echo "Starting WebUI API"
     source /venv/stable-diffusion-webui/venv/bin/activate
-    python3.10 /workspace/stable-diffusion-webui/webui.py --api --nowebui --port 3000 --no-half --disable-nan-check > /workspace/logs/${RUNPOD_POD_ID}-webui-api.log 2>&1 &
+    python3.10 /workspace/stable-diffusion-webui/webui.py --api --nowebui --port 3000 --no-half --disable-nan-check > /workspace/logs/webui-api-${RUNPOD_POD_ID}.log 2>&1 &
     deactivate
 else
     echo "Skipping WebUI API Launch as IS_TRAINING_POD_ONLY is set to true or TRUE"

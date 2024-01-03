@@ -73,7 +73,7 @@ def run_training(json):
 
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
-        with open(f'{LOGGING_DIR}/{RUNPOD_ID}-kohya_ss.log', 'w') as log_file:
+        with open(f'{LOGGING_DIR}/kohya_ss-{RUNPOD_ID}.log', 'w') as log_file:
             subprocess.run(training_command, shell=True,
                            stdout=log_file, stderr=subprocess.STDOUT, check=True)
 
