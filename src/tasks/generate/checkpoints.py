@@ -4,6 +4,7 @@ import subprocess
 
 from .session import automatic_session
 from utils.constants import LOCAL_URL
+from utils.config import load_config
 
 
 def softlink_checkpoint(checkpoint_path):
@@ -49,10 +50,10 @@ def refresh_vae():
 
 
 def handle_checkpoint(json_data):
-    if 'override_settings' not in json_data:
-        return json_data, None
-    if 'sd_model_checkpoint' not in json_data.get('override_settings'):
-        return json_data, None
+    if 'override_settings' not in json_data or 'sd_model_checkpoint' not in json_data['override_settings']:
+        default_config = load_config("/workspace/config/webui.json")
+        override_settings = default_config.get("override_settings")
+        return {**json_data, "override_settings": override_settings}, None
 
     checkpoint_path = json_data.get(
         "override_settings").get("sd_model_checkpoint")
