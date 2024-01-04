@@ -68,6 +68,11 @@ parser_path=" /workspace/stable-diffusion-webui/repositories/CodeFormer/weights/
 parser_url="https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/parsing_parsenet.pth"
 download_if_not_exists "$parser_path" "$parser_url"
 
+cfpcan_path="/workspace/stable-diffusion-webui/models/GFPGAN/GFPGANv1.4.pth"
+cfpgan_url="https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth"
+download_if_not_exists "$cfpcan_path" "$cfpgan_url"
+
+
 # Set up workspace/configs
 SOURCE_DIR="/config"
 DEST_DIR="/workspace/config"
