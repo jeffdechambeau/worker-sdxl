@@ -80,9 +80,14 @@ def find_model(model_name):
     return match
 
 
+def load_and_tidy_model_name(json_data):
+    model_name = json_data.get("override_settings").get("sd_model_checkpoint")
+    return model_name.replace(".safetensors", "")
+
+
 def handle_checkpoint(json_data):
     json_data = handle_override_settings(json_data)
-    model_name = json_data.get("override_settings").get("sd_model_checkpoint")
+    model_name = load_and_tidy_model_name(json_data)
     match = find_model(model_name)
 
     if match:
