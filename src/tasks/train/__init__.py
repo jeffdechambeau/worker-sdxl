@@ -81,7 +81,7 @@ def check_model_path(path):
 def validate_model_path(json):
     model = json.get("pretrained_model_name_or_path")
     if is_path(model):
-        return model
+        return json
 
     locations = ['/workspace/stable-diffusion-webui/models/Stable-diffusion',
                  '/workspace/witit-custom/checkpoints']
@@ -91,7 +91,8 @@ def validate_model_path(json):
         path = os.path.join(location, model)
         model_path = check_model_path(path)
         if model_path:
-            return model_path
+            json["pretrained_model_name_or_path"] = model_path
+            return json
 
     raise Exception(f"Invalid pretrained_model_name_or_path: {model}")
 
@@ -99,6 +100,8 @@ def validate_model_path(json):
 def run_training(json):
     job_id = json.get('job_id')
     webhook = json.get('webhook')
+
+    json = validate_model_path(json)
 
     user_folder = prepare_folder(
         username=json['username'], images=json['images'], token_name=json['token'], class_name=json['class'])
