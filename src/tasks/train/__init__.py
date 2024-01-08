@@ -12,9 +12,12 @@ from .shell import make_command_from_json
 from .io import make_success_payload, make_error_payload, delete_checkpoint
 
 
-def make_train_command(input_json):
+def create_model_name(json):
+    return f"{json['username']}-{str(uuid.uuid4())}"
+
+
+def make_train_command(input_json, model_name):
     json = input_json.copy()
-    model_name = f"{json['username']}-{str(uuid.uuid4())}"
     train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
 
     keys_to_remove = [
@@ -102,11 +105,12 @@ def run_training(json):
     webhook = json.get('webhook')
 
     json = validate_model_path(json)
+    model_name = create_model_name(json)
 
     user_folder = prepare_folder(
         username=json['username'], images=json['images'], token_name=json['token'], class_name=json['class'])
 
-    training_command, output_file = make_train_command(json)
+    training_command, output_file = make_train_command(json, model_name)
 
     try:
         os.makedirs(LOGGING_DIR, exist_ok=True)
@@ -117,9 +121,10 @@ def run_training(json):
         delete_training_folder(user_folder)
 
         result = make_success_payload(
-            json['username'], json['token'], json['class'], output_file, job_id)
+            json['username'], json['token'], json['class'], model_name, job_id)
 
-        print(f"Training finished: {output_file}")
+        print(f"Training finished: {model_name}")
+        print(f"Full path: {output_file}")
 
     except Exception as e:
         delete_training_folder(user_folder)
