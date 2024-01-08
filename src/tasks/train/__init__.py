@@ -14,7 +14,7 @@ from .io import make_success_payload, make_error_payload, delete_checkpoint
 
 def make_train_command(input_json):
     json = input_json.copy()
-    output_name = f"{json['username']}-{str(uuid.uuid4())}"
+    model_name = f"{json['username']}-{str(uuid.uuid4())}"
     train_data_dir = os.path.join(TRAIN_DATA_DIR_BASE, json['username'], "img")
 
     keys_to_remove = [
@@ -40,16 +40,17 @@ def make_train_command(input_json):
         "num_cpu_threads_per_process": MAX_CPU_THREADS,
         "script": SCRIPT_PATH,
         "train_data_dir": train_data_dir,
-        "output_name": output_name,
+        "output_name": model_name,
         **load_config(KOHYA_CONFIG_PATH),
         **json
     }
 
     command = make_command_from_json(config)
-    output_file = f'{config["output_dir"]}/{output_name}.safetensors'
+    output_file = f'{config["output_dir"]}/{model_name}.safetensors'
     final_command = f"accelerate launch {command}"
 
     print(f"""
+            model_name: {model_name}
             username: {input_json['username']}
             token: {input_json['token']}
             class_name: {input_json['class']}
@@ -60,6 +61,39 @@ def make_train_command(input_json):
             training_command: {final_command}""")
 
     return final_command, output_file
+
+
+def is_path(input_path):
+    return os.path.isfile(input_path)
+
+
+def append_safetensors(file_name):
+    if not file_name.endswith(".safetensors"):
+        return f"{file_name}.safetensors"
+    return file_name
+
+
+def check_model_path(path):
+    path_with_extension = append_safetensors(path)
+    return path_with_extension if os.path.exists(path_with_extension) else None
+
+
+def validate_model_path(json):
+    model = json.get("pretrained_model_name_or_path")
+    if is_path(model):
+        return model
+
+    locations = ['/workspace/stable-diffusion-webui/models/Stable-diffusion',
+                 '/workspace/witit-custom/checkpoints']
+
+    # Check in specified locations (with .safetensors)
+    for location in locations:
+        path = os.path.join(location, model)
+        model_path = check_model_path(path)
+        if model_path:
+            return model_path
+
+    raise Exception(f"Invalid pretrained_model_name_or_path: {model}")
 
 
 def run_training(json):

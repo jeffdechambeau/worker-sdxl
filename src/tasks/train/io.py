@@ -2,11 +2,11 @@
 import os
 
 
-def make_success_payload(username, token_name, class_name, output_file, job_id):
+def make_success_payload(username, token_name, class_name, model_name, job_id):
     return {
         "job_id": job_id,
         "status": "success",
-        "custom_checkpoint_path": output_file,
+        "model_name": model_name,
         "username": username,
         "token": token_name,
         "class": class_name,
