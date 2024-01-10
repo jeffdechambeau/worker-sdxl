@@ -94,6 +94,7 @@ def validate_model_path(json):
         path = os.path.join(location, model)
         model_path = check_model_path(path)
         if model_path:
+            print("Found model in specified location", model_path)
             json["pretrained_model_name_or_path"] = model_path
             return json
 
