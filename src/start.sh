@@ -9,7 +9,7 @@ mkdir -p /workspace/logs
 isTrainingPodOnly=$(echo "${IS_TRAINING_POD_ONLY}" | tr '[:upper:]' '[:lower:]')
 
 # Default arguments for launching WebUI API
-defaultWebUIArgs="--api --nowebui --port 3000 --no-half --disable-nan-check --precision full"
+defaultWebUIArgs="--api --nowebui --port 3000 --no-half --disable-nan-check --precision full --xformers"
 
 # Use the WEBUI_API_ARGS environment variable if set, otherwise use the default
 webUIArgs="${WEBUI_API_ARGS:-$defaultWebUIArgs}"
